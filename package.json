@@ -10,6 +10,7 @@
     "url": "https://github.com/crescware/walts/issues"
   },
   "files": [
+    "index.ts",
     "LICENSE",
     "package.json",
     "README.md",
