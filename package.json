@@ -1,22 +1,38 @@
 {
   "name": "walts",
-  "version": "0.0.1",
-  "description": "Flux framework for Angular 2",
+  "description": "One-way pub/sub architecture for Angular 2",
+  "version": "0.5.0",
+  "author": {
+    "name": "Crescware",
+    "email": "crescware@icloud.com"
+  },
+  "bugs": {
+    "url": "https://github.com/crescware/walts/issues"
+  },
+  "files": [
+    "LICENSE",
+    "package.json",
+    "README.md",
+    "src"
+  ],
+  "homepage": "https://github.com/crescware/walts",
+  "keywords": [
+    "angular2",
+    "angularjs",
+    "flux",
+    "framework",
+    "rxjs"
+  ],
+  "license": "MIT",
   "main": "index.js",
-  "scripts": {
-    "test": "mocha"
+  "peerDependencies": {
+    "rxjs": "5.0.0-beta.6"
   },
   "repository": {
     "type": "git",
     "url": "https://github.com/crescware/walts"
   },
-  "keywords": [
-    "flux",
-    "angular2",
-    "angularjs",
-    "framework",
-    "rxjs"
-  ],
-  "author": "Crescware",
-  "license": "MIT"
+  "scripts": {
+    "test": "mocha"
+  }
 }
