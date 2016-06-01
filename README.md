@@ -1,2 +1,2 @@
 # Walts
-Flux framework for Angular 2
+One-way pub/sub architecture for Angular 2
