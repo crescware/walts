@@ -1,0 +1,18 @@
+{
+    "compilerOptions": {
+        "target": "es6",
+        "noImplicitAny": true,
+        "experimentalDecorators": true,
+        "emitDecoratorMetadata": true,
+        "moduleResolution": "node"
+    },
+    "filesGlob": [
+        "src/**/*.ts",
+        "!src/**/*.d.ts"
+    ],
+    "files": [
+        "src/action.ts",
+        "src/dispatcher.ts",
+        "src/store.ts"
+    ]
+}

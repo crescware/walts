@@ -9,12 +9,22 @@
   "bugs": {
     "url": "https://github.com/crescware/walts/issues"
   },
+  "devDependencies": {
+    "tsconfig-cli": "^2.0.0",
+    "typescript": "^1.8.10"
+  },
   "files": [
     "index.ts",
+    "index.d.ts",
     "LICENSE",
     "package.json",
     "README.md",
-    "src"
+    "src/action.ts",
+    "src/action.d.ts",
+    "src/dispatcher.ts",
+    "src/dispatcher.d.ts",
+    "src/store.ts",
+    "src/store.d.ts"
   ],
   "homepage": "https://github.com/crescware/walts",
   "keywords": [
@@ -35,5 +45,6 @@
   },
   "scripts": {
     "test": "mocha"
-  }
+  },
+  "typings": "index.d.ts"
 }
