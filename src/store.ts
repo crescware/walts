@@ -11,7 +11,7 @@ export class Store<ST extends State> {
   private state: ST;
 
   constructor(initState: ST,
-              private dispatcher: Dispatcher<ST>) {
+              protected dispatcher: Dispatcher<ST>) {
     this.state = initState;
     this.dispatcher.subscribe((reducer) => {
       const currentState = Promise.resolve(Object.assign({}, this.state) as ST);
