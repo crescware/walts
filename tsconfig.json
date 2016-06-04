@@ -1,18 +1,23 @@
 {
     "compilerOptions": {
-        "target": "es6",
+        "target": "es5",
         "noImplicitAny": true,
         "experimentalDecorators": true,
         "emitDecoratorMetadata": true,
         "moduleResolution": "node"
     },
     "filesGlob": [
+        "*.ts",
+        "!*.d.ts",
         "src/**/*.ts",
-        "!src/**/*.d.ts"
+        "!src/**/*.d.ts",
+        "node_modules/typescript/lib/lib.es6.d.ts"
     ],
     "files": [
+        "index.ts",
         "src/action.ts",
         "src/dispatcher.ts",
-        "src/store.ts"
+        "src/store.ts",
+        "node_modules/typescript/lib/lib.es6.d.ts"
     ]
 }

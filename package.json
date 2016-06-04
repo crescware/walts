@@ -19,11 +19,11 @@
     "LICENSE",
     "package.json",
     "README.md",
-    "src/action.ts",
+    "src/action.js",
     "src/action.d.ts",
-    "src/dispatcher.ts",
+    "src/dispatcher.js",
     "src/dispatcher.d.ts",
-    "src/store.ts",
+    "src/store.js",
     "src/store.d.ts"
   ],
   "homepage": "https://github.com/crescware/walts",
@@ -44,6 +44,7 @@
     "url": "https://github.com/crescware/walts"
   },
   "scripts": {
+    "build": "tsconfig -u && tsc -p .",
     "test": "mocha"
   },
   "typings": "index.d.ts"
