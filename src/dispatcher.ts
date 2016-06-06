@@ -3,12 +3,20 @@ import { Subject } from 'rxjs/Subject';
 import { Reducer, AsyncReducer } from './action';
 import { State } from './store';
 
+function isReducers<ST>(v: Reducer<ST> | Reducer<ST>[]): v is Reducer<ST>[] {
+  return Array.isArray(v);
+}
+
 export class Dispatcher<ST extends State> {
 
   private subject = new Subject<AsyncReducer<ST>>();
 
-  emit(reducer: Reducer<ST>): void {
-    this.emitAll([reducer]);
+  emit(reducer: Reducer<ST> | Reducer<ST>[]): void {
+    if (isReducers<ST>(reducer)) {
+      this.emitAll(reducer);
+      return;
+    }
+    this.emitAll([reducer as Reducer<ST>]);
   }
 
   emitAll(reducers: Reducer<ST>[]): void {
