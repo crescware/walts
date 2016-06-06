@@ -14,7 +14,7 @@
     "typescript": "^1.8.10"
   },
   "files": [
-    "index.ts",
+    "index.js",
     "index.d.ts",
     "LICENSE",
     "package.json",
