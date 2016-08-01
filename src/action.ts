@@ -12,7 +12,7 @@ export class Action<ST extends State> {
   }
 
   protected combine(...reducers: Array<Reducer<ST> | RecursiveArray<Reducer<ST>>>): Reducer<ST>[] {
-    const flatten = <T>(array: Array<T | RecursiveArray<T>>): Array<T | RecursiveArray<T>> => {
+    let flatten = <T>(array: Array<T | RecursiveArray<T>>): Array<T | RecursiveArray<T>> => {
       return array.reduce<Array<T | RecursiveArray<T>>>((p: Array<T | RecursiveArray<T>>, c: T | RecursiveArray<T>) => {
         return Array.isArray(c)
           ? p.concat(flatten<T | RecursiveArray<T>>(c))
