@@ -1,0 +1,8 @@
+{
+  "name": "counter",
+  "dependencies": {},
+  "globalDependencies": {
+    "mocha": "registry:dt/mocha#2.2.5+20160720003353",
+    "power-assert": "registry:dt/power-assert#0.0.0+20160316155526"
+  }
+}
