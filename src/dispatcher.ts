@@ -1,7 +1,7 @@
 import { Subject } from 'rxjs/Subject';
 import { isPromise as rxIsPromise } from 'rxjs/util/isPromise';
 
-import { Next, AsyncNext, Reducer } from './action';
+import { Next, AsyncNext, Processor } from './action';
 import { State } from './store';
 
 function isNexts<ST>(v: Next<ST> | Next<ST>[]): v is Next<ST>[] {
@@ -13,7 +13,7 @@ function isPromise<ST>(v: Next<ST>): v is AsyncNext<ST> {
 
 export class Dispatcher<ST extends State> {
 
-  private subject = new Subject<Reducer<ST>>();
+  private subject = new Subject<Processor<ST>>();
 
   emit(next: Next<ST> | Next<ST>[]): void {
     if (isNexts<ST>(next)) {
@@ -24,24 +24,24 @@ export class Dispatcher<ST extends State> {
   }
 
   emitAll(nexts: Next<ST>[]): void {
-    const reducer = (st: Promise<ST>) => {
+    const processor = (st: Promise<ST>) => {
       return nexts
         .reduce<Promise<ST>>((a, b) => {
           return new Promise((resolve) => {
             a.then((aa) => {
               return (isPromise(b))
-                ? b.then((bb) => resolve(Object.assign({}, aa, bb(aa))))
-                :                resolve(Object.assign({}, aa,  b(aa)));
+                ? b.then((bb) => resolve(Object.assign(aa, bb(aa))))
+                :                resolve(Object.assign(aa,  b(aa)));
             });
           });
         }, st);
     };
-    this.subject.next(reducer);
+    this.subject.next(processor);
   }
 
-  subscribe(observer: (reducer: Reducer<ST>) => void): void {
-    this.subject.subscribe((reducer) => {
-      observer(reducer);
+  subscribe(observer: (processor: Processor<ST>) => void): void {
+    this.subject.subscribe((processor) => {
+      observer(processor);
     });
   }
 
