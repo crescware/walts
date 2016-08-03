@@ -11,15 +11,16 @@ export class IncrementBAction extends Action<AppState> {
   }
 
   create(v: number): Next<AppState> {
-    return (state: AppState) => {
-      return new Promise((resolve) => {
-        setTimeout(() => {
-          resolve({
+    return new Promise((resolve) => {
+      setTimeout(() => {
+        resolve((state: AppState) => {
+          console.log(`IncrementBAction`, state);
+          return {
             counterB: state.counterB + v
-          });
-        }, 1000);
-      });
-    };
+          };
+        });
+      }, 1000);
+    });
   }
 
 }

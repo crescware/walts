@@ -16,10 +16,11 @@ export class Store<ST extends State> {
     this._observable = new BehaviorSubject<ST>(this.state);
 
     this.dispatcher.subscribe((reducer) => {
+      console.log(`Store`, this.state);
       const current = Promise.resolve(this.state);
       reducer(current).then((next: ST) => {
-        this.state = next;
-        this._observable.next(Object.assign({}, next) as ST);
+        this.state = Object.assign({}, this.state, next);
+        this._observable.next(this.state);
       });
     });
   }

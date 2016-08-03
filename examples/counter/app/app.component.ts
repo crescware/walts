@@ -44,6 +44,7 @@ export class AppComponent {
               private times2Plus1B: Times2Plus1BAction,
               private reset: ResetAction) {
     this.store.observable.subscribe((state) => {
+      console.log(`Component`, state);
       this.state = state;
     });
   }

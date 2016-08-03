@@ -1,6 +1,8 @@
 import { State } from './store';
 
-export type Next<ST extends State> = (state: ST) => ST | Promise<ST>;
+export type SyncNext<ST extends State> = (state: ST) => ST
+export type AsyncNext<ST extends State> =  Promise<(state: ST) => ST>;
+export type Next<ST extends State> = SyncNext<ST> | AsyncNext<ST>;
 export type Reducer<ST extends State> = (p: Promise<ST>) => Promise<ST>;
 
 interface RecursiveArray<T> extends Array<T | RecursiveArray<T>> {}

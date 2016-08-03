@@ -1,13 +1,13 @@
 import { Subject } from 'rxjs/Subject';
 import { isPromise as rxIsPromise } from 'rxjs/util/isPromise';
 
-import { Next, Reducer } from './action';
+import { Next, AsyncNext, Reducer } from './action';
 import { State } from './store';
 
 function isNexts<ST>(v: Next<ST> | Next<ST>[]): v is Next<ST>[] {
   return Array.isArray(v);
 }
-function isPromise<ST>(v: ST | Promise<ST>): v is Promise<ST> {
+function isPromise<ST>(v: Next<ST>): v is AsyncNext<ST> {
   return rxIsPromise(v);
 }
 
@@ -26,13 +26,12 @@ export class Dispatcher<ST extends State> {
   emitAll(nexts: Next<ST>[]): void {
     const reducer = (st: Promise<ST>) => {
       return nexts
-        .reduce((a, b) => {
+        .reduce<Promise<ST>>((a, b) => {
           return new Promise((resolve) => {
             a.then((aa) => {
-              const bb = b(aa);
-              return (isPromise(bb))
-                ? bb.then((bbb) => resolve(Object.assign({}, aa, bbb)))
-                :                  resolve(Object.assign({}, aa, bb));
+              return (isPromise(b))
+                ? b.then((bb) => resolve(Object.assign({}, aa, bb(aa))))
+                :                resolve(Object.assign({}, aa,  b(aa)));
             });
           });
         }, st);
