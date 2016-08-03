@@ -14,7 +14,6 @@ export class IncrementBAction extends Action<AppState> {
     return new Promise((resolve) => {
       setTimeout(() => {
         resolve((state: AppState) => {
-          console.log(`IncrementBAction`, state);
           return {
             counterB: state.counterB + v
           };
