@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Action, Reducer } from 'walts';
+import { Action, Next } from 'walts';
 
 import { AppState } from '../app.store';
 
@@ -10,12 +10,11 @@ export class ResetAction extends Action<AppState> {
     super();
   }
 
-  create(): Reducer<AppState> {
-    return (state: AppState) => {
-      state.counterA = 0;
-      state.counterB = 0;
-      return Promise.resolve(state);
-    };
+  create(): Next<AppState> {
+    return (state: AppState) => ({
+      counterA: 0,
+      counterB: 0
+    });
   }
 
 }

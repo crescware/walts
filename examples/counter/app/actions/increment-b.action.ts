@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Action, Reducer } from 'walts';
+import { Action, Next } from 'walts';
 
 import { AppState } from '../app.store';
 
@@ -10,10 +10,15 @@ export class IncrementBAction extends Action<AppState> {
     super();
   }
 
-  create(v: number): Reducer<AppState> {
+  create(v: number): Next<AppState> {
     return (state: AppState) => {
-      state.counterB = state.counterB + v;
-      return Promise.resolve(state);
+      return new Promise((resolve) => {
+        setTimeout(() => {
+          resolve({
+            counterB: state.counterB + v
+          });
+        }, 1000);
+      });
     };
   }
 

@@ -4,8 +4,8 @@ import { State, Store } from 'walts';
 import { AppDispatcher } from './app.dispatcher';
 
 export class AppState extends State {
-  counterA: number;
-  counterB: number;
+  counterA?: number;
+  counterB?: number;
 }
 
 const INIT_STATE: AppState = {
