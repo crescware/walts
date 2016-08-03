@@ -33,6 +33,7 @@
     "clean": "rm -rf ./.tmp",
     "copy-walts": "rm -rf ./node_modules/walts && mkdir ./node_modules/walts && cp -r ../../src ./node_modules/walts/src && cp ../../index.js ./node_modules/walts/index.js && cp ../../index.d.ts ./node_modules/walts/index.d.ts",
     "karma": "karma start",
+    "postinstall": "typings install",
     "start": "superstatic --port 8080 --host 127.0.0.1",
     "tsc": "tsc -p .",
     "webpack": "webpack ./.tmp/app/index.js --output-filename ./built/index.js"
