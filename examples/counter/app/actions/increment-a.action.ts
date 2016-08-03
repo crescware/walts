@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Action, Reducer } from 'walts';
 
-import {AppState} from '../app.store';
+import { AppState } from '../app.store';
 
 @Injectable()
 export class IncrementAAction extends Action<AppState> {
