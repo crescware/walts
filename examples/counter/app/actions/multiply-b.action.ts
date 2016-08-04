@@ -11,8 +11,14 @@ export class MultiplyBAction extends Action<AppState> {
   }
 
   create(v: number): Next<AppState> {
-    return (state: AppState) => ({
-      counterB: state.counterB * v
+    return new Promise((resolve) => {
+      setTimeout(() => {
+        resolve((state: AppState) => {
+          return {
+            counterB: state.counterB * v
+          };
+        });
+      }, 1000);
     });
   }
 

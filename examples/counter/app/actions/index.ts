@@ -2,6 +2,7 @@ import { IncrementAAction } from './increment-a.action';
 import { IncrementBAction } from './increment-b.action';
 import { MultiplyAAction } from './multiply-a.action';
 import { MultiplyBAction } from './multiply-b.action';
+import { NestedCombileAction } from './nested-combine.action';
 import { Plus1Times2BAction } from './plus1times2-b.action';
 import { ResetAction } from './reset.action';
 import { SyncThrowAction } from './sync-throw.action';
@@ -13,6 +14,7 @@ export const actions = [
   IncrementBAction,
   MultiplyAAction,
   MultiplyBAction,
+  NestedCombileAction,
   Plus1Times2BAction,
   ResetAction,
   SyncThrowAction,
