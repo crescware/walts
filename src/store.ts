@@ -8,18 +8,20 @@ export abstract class State {}
 export class Store<ST extends State> {
 
   private _observable: BehaviorSubject<ST>;
-  private state: ST;
+  private stateRef: ST;
 
   constructor(initState: ST,
               protected dispatcher: Dispatcher<ST>) {
-    this.state       = initState;
-    this._observable = new BehaviorSubject<ST>(this.state);
+    this.stateRef    = Object.assign({}, initState) as ST;
+    this._observable = new BehaviorSubject<ST>(this.stateRef);
 
-    this.dispatcher.subscribe((reducer) => {
-      const currentState = Promise.resolve(Object.assign({}, this.state) as ST);
-      reducer(currentState).then((nextState: ST) => {
-        this.state = nextState;
-        this._observable.next(Object.assign({}, nextState) as ST);
+    this.dispatcher.subscribe((processor) => {
+      const before = Promise.resolve(this.stateRef);
+      processor(before).then((after: ST) => {
+        this.stateRef = after;
+        this._observable.next(Object.assign({}, this.stateRef) as ST);
+      }).catch((err: any) => {
+        this._observable.error(err);
       });
     });
   }

@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Action, Reducer } from 'walts';
+import { Action, Next } from 'walts';
 
 import { AppState } from '../app.store';
 import { MultiplyBAction } from './multiply-b.action';
@@ -11,12 +11,11 @@ export class Plus1Times2BAction extends Action<AppState> {
     super();
   }
 
-  create(): Reducer<AppState>[] {
+  create(): Next<AppState>[] {
     return this.combine([
-      (state: AppState) => {
-        state.counterB = state.counterB + 1;
-        return Promise.resolve(state);
-      },
+      (state: AppState) => ({
+        counterB: state.counterB + 1
+      }),
       this.multiplyB.create(2)
     ]);
   }

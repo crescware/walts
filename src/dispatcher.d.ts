@@ -1,8 +1,8 @@
-import { Reducer, AsyncReducer } from './action';
+import { Next, Processor } from './action';
 import { State } from './store';
 
 export declare class Dispatcher<ST extends State> {
-  emit(reducer: Reducer<ST> | Reducer<ST>[]): void;
-  emitAll(reducers: Reducer<ST>[]): void;
-  subscribe(observer: (asyncReducer: AsyncReducer<ST>) => void): void;
+  emit(reducer: Next<ST> | Next<ST>[]): void;
+  emitAll(reducers: Next<ST>[]): void;
+  subscribe(observer: (asyncReducer: Processor<ST>) => void): void;
 }

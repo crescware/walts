@@ -4,16 +4,17 @@ import { Action, Next } from 'walts';
 import { AppState } from '../app.store';
 
 @Injectable()
-export class ResetAction extends Action<AppState> {
+export class Wait1SecAndThrowAction extends Action<AppState> {
 
   constructor() {
     super();
   }
 
   create(): Next<AppState> {
-    return (state: AppState) => ({
-      counterA: 0,
-      counterB: 0
+    return new Promise((resolve, reject) => {
+      setTimeout(() => {
+        reject(new Error('Example error!'));
+      }, 1000);
     });
   }
 
