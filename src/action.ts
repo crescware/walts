@@ -9,7 +9,7 @@ interface RecursiveArray<T> extends Array<T | RecursiveArray<T>> {}
 
 export class Action<ST extends State> {
 
-  protected combine(...reducers: Array<Next<ST> | RecursiveArray<Next<ST>>>): Next<ST>[] {
+  protected combine(...nexts: Array<Next<ST> | RecursiveArray<Next<ST>>>): Next<ST>[] {
     let flatten = <T>(array: Array<T | RecursiveArray<T>>): Array<T | RecursiveArray<T>> => {
       return array.reduce<Array<T | RecursiveArray<T>>>((p: Array<T | RecursiveArray<T>>, c: T | RecursiveArray<T>) => {
         return Array.isArray(c)
@@ -18,7 +18,7 @@ export class Action<ST extends State> {
       }, []);
     };
 
-    return flatten<Next<ST>>(reducers) as Next<ST>[];
+    return flatten<Next<ST>>(nexts) as Next<ST>[];
   }
 
 }
