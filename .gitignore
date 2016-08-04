@@ -4,3 +4,5 @@ npm-debug.log
 *.js
 .tmp
 typings/
+
+!karma.conf.js
