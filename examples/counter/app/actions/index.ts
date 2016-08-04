@@ -4,7 +4,9 @@ import { MultiplyAAction } from './multiply-a.action';
 import { MultiplyBAction } from './multiply-b.action';
 import { Plus1Times2BAction } from './plus1times2-b.action';
 import { ResetAction } from './reset.action';
+import { SyncThrowAction } from './sync-throw.action';
 import { Times2Plus1BAction } from './times2plus1-b.action';
+import { Wait1SecAndThrowAction } from './wait1sec-and-throw.action';
 
 export const actions = [
   IncrementAAction,
@@ -13,5 +15,7 @@ export const actions = [
   MultiplyBAction,
   Plus1Times2BAction,
   ResetAction,
-  Times2Plus1BAction
+  SyncThrowAction,
+  Times2Plus1BAction,
+  Wait1SecAndThrowAction
 ];

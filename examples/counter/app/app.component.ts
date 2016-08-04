@@ -5,8 +5,10 @@ import { IncrementAAction } from './actions/increment-a.action';
 import { IncrementBAction } from './actions/increment-b.action';
 import { MultiplyAAction } from './actions/multiply-a.action';
 import { Plus1Times2BAction } from './actions/plus1times2-b.action';
-import { Times2Plus1BAction } from './actions/times2plus1-b.action';
 import { ResetAction } from './actions/reset.action';
+import { SyncThrowAction } from './actions/sync-throw.action';
+import { Times2Plus1BAction } from './actions/times2plus1-b.action';
+import { Wait1SecAndThrowAction } from './actions/wait1sec-and-throw.action';
 
 import { AppDispatcher } from './app.dispatcher';
 import { AppStore, AppState } from './app.store';
@@ -29,6 +31,8 @@ import { AppStore, AppState } from './app.store';
     <button (click)="onClickPlus1Times2B()">B +1 x2</button>
     <button (click)="onClickTimes2Plus1B()">B x2 +1</button>
     <button (click)="onClickReset()">Reset</button>
+    <button (click)="onClickAsyncThrow()">Async Throw</button>
+    <button (click)="onClickSyncThrow()">Sync Throw</button>
   `
 })
 export class AppComponent {
@@ -41,10 +45,14 @@ export class AppComponent {
               private incrementB: IncrementBAction,
               private multiplyA: MultiplyAAction,
               private plus1Times2B: Plus1Times2BAction,
+              private reset: ResetAction,
+              private syncThrow: SyncThrowAction,
               private times2Plus1B: Times2Plus1BAction,
-              private reset: ResetAction) {
+              private wait1SecAndThrow: Wait1SecAndThrowAction) {
     this.store.observable.subscribe((state) => {
       this.state = state;
+    }, (err) => {
+      console.error('Caught the error.', err);
     });
   }
 
@@ -84,6 +92,18 @@ export class AppComponent {
 
   onClickReset() {
     this.dispatcher.emit(this.reset.create());
+  }
+
+  onClickAsyncThrow() {
+    this.dispatcher.emit(this.wait1SecAndThrow.create());
+  }
+
+  onClickSyncThrow() {
+    try {
+      this.dispatcher.emit(this.syncThrow.create());
+    } catch(err) {
+      console.error('Caught the error.', err);
+    }
   }
 
 }

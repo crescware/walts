@@ -20,6 +20,8 @@ export class Store<ST extends State> {
       processor(before).then((after: ST) => {
         this.stateRef = after;
         this._observable.next(Object.assign({}, this.stateRef) as ST);
+      }).catch((err: any) => {
+        this._observable.error(err);
       });
     });
   }

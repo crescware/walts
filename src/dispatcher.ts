@@ -27,11 +27,23 @@ export class Dispatcher<ST extends State> {
     const processor = (st: Promise<ST>) => {
       return nexts
         .reduce<Promise<ST>>((a, b) => {
-          return new Promise((resolve) => {
+          return new Promise((resolve, reject) => {
             a.then((aa) => {
-              return (isPromise(b))
-                ? b.then((bb) => resolve(Object.assign(aa, bb(aa))))
-                :                resolve(Object.assign(aa,  b(aa)));
+              if (isPromise(b)) {
+                b.then((bb) => {
+                  resolve(Object.assign(aa, bb(aa)));
+                }).catch((err) => {
+                  reject(err);
+                });
+                return;
+              }
+              try {
+                resolve(Object.assign(aa, b(aa)));
+              } catch(err) {
+                reject(err);
+              }
+            }).catch((err) => {
+              reject(err);
             });
           });
         }, st);
