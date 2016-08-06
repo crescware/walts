@@ -1,0 +1,31 @@
+{
+  "name": "flux-chat",
+  "version": "0.0.0",
+  "dependencies": {
+    "@angular/common": "^2.0.0-rc.4",
+    "@angular/compiler": "^2.0.0-rc.4",
+    "@angular/core": "^2.0.0-rc.4",
+    "@angular/platform-browser": "^2.0.0-rc.4",
+    "@angular/platform-browser-dynamic": "^2.0.0-rc.4",
+    "core-js": "^2.4.1",
+    "rxjs": "^5.0.0-beta.10",
+    "zone.js": "^0.6.12"
+  },
+  "devDependencies": {
+    "superstatic": "^4.0.3",
+    "typescript": "^2.0.0",
+    "webpack": "^1.13.1"
+  },
+  "keywords": [],
+  "license": "MIT",
+  "main": "index.js",
+  "scripts": {
+    "build": "npm run walts-build && npm run copy-walts && npm run clean && npm run tsc && npm run webpack",
+    "clean": "rm -rf ./.tmp",
+    "copy-walts": "rm -rf ./node_modules/walts && mkdir ./node_modules/walts && cp -r ../../src ./node_modules/walts/src && cp ../../index.js ./node_modules/walts/index.js && cp ../../index.d.ts ./node_modules/walts/index.d.ts",
+    "start": "superstatic --port 8080 --host 127.0.0.1",
+    "tsc": "tsc -p .",
+    "walts-build": "cd ../../ && npm run build && cd ./examples/counter",
+    "webpack": "webpack ./.tmp/app/index.js --output-filename ./built/index.js"
+  }
+}
