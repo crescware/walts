@@ -36,8 +36,6 @@ function getAllChrono(threads: Threads): Thread[] {
 @Injectable()
 export class MessageActions extends Action<AppState> {
 
-  private threads: Threads = {};
-
   constructor() {
     super();
   }
@@ -48,11 +46,11 @@ export class MessageActions extends Action<AppState> {
 
       rawMessages.forEach((message) => {
         var threadID = message.threadID;
-        var thread = this.threads && this.threads[threadID];
+        var thread = state.threads && state.threads[threadID];
         if (thread && message.timestamp < Math.floor(thread.lastMessage.date.getTime() / 1000)) {
           return;
         }
-        this.threads[threadID] = {
+        state.threads[threadID] = {
           id: threadID,
           name: message.threadName,
           lastMessage: convertRawMessage(message, state.threadId)
@@ -60,12 +58,11 @@ export class MessageActions extends Action<AppState> {
       });
 
       if (!state.threadId) {
-        const allChrono = getAllChrono(this.threads);
-        state.threads = allChrono;
+        const allChrono = getAllChrono(state.threads);
         state.threadId = allChrono[allChrono.length - 1].id;
       }
 
-      this.threads[state.threadId].lastMessage.isRead = true;
+      state.threads[state.threadId].lastMessage.isRead = true;
 
       let messages = {} as Messages;
       rawMessages.forEach((m) => {
@@ -77,7 +74,7 @@ export class MessageActions extends Action<AppState> {
 
       return {
         messages
-      };
+      } as AppState;
     };
   }
 

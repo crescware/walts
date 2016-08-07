@@ -5,6 +5,10 @@ import { MessageActions } from "./actions/message.actions";
 
 import { AppDispatcher } from './app.dispatcher';
 import { AppStore, AppState } from './app.store';
+import { ThreadStore } from './thread.store';
+import { MessageStore } from './message.store';
+import { Thread } from './thread';
+import { Message } from './message';
 
 @Component({
   selector: 'fc-app',
@@ -12,7 +16,9 @@ import { AppStore, AppState } from './app.store';
   providers: [
     actions,
     AppDispatcher,
-    AppStore
+    AppStore,
+    ThreadStore,
+    MessageStore
   ],
   template: `
   <div class="chatapp">
@@ -20,26 +26,29 @@ import { AppStore, AppState } from './app.store';
       <div class="thread-count"></div>
       <ul class="thread-list">
         <li
-          *ngFor="let thread of state.threads"
+          *ngFor="let _thread of threads"
           class="thread-list-item"
         >
-          <h5 class="thread-name">{{thread.name}}</h5>
+          <h5 class="thread-name">{{_thread?.name}}</h5>
           <div class="thread-time">
-            {{thread.lastMessage.date.toLocaleTimeString()}}
+            {{_thread?.lastMessage?.date?.toLocaleTimeString()}}
           </div>
           <div class="thread-last-message">
-            {{thread.lastMessage.text}}
+            {{_thread?.lastMessage?.text}}
           </div>
         </li>
       </ul>
     </div>
     <div class="message-section">
-      <h3 class="message-thread-heading"></h3>
+      <h3 class="message-thread-heading">{{thread?.name}}</h3>
       <ul class="message-list">
-        <li class="message-list-item">
-          <h5 class="message-author-name"></h5>
-          <div class="message-time"></div>
-          <div class="message-text"></div>
+        <li
+          *ngFor="let message of messages"
+          class="message-list-item"
+        >
+          <h5 class="message-author-name">{{message?.authorName}}</h5>
+          <div class="message-time">{{message?.date?.toLocaleTimeString()}}</div>
+          <div class="message-text">{{message?.text}}</div>
         </li>
       </ul>
       <textarea name="message" id="message-composer" class="message-composer"></textarea>
@@ -49,15 +58,17 @@ import { AppStore, AppState } from './app.store';
 })
 export class AppComponent {
 
-  private state: AppState;
+  private threads: Thread[];
+  private thread: Thread;
+  private messages: Message[];
 
   constructor(private dispatcher: AppDispatcher,
-              private store: AppStore,
+              private threadStore: ThreadStore,
+              private messageStore: MessageStore,
               private messageActions: MessageActions) {
-    this.store.observable.subscribe((state) => {
-      console.log(state);
-      this.state = state;
-    });
+    this.threadStore.getAllChrono((s) => this.threads = s);
+    this.threadStore.getCurrent((s) => this.thread = s);
+    this.messageStore.getAllForCurrentThread((s) => this.messages = s);
   }
 
   ngOnInit() {
