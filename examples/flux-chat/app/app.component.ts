@@ -1,14 +1,16 @@
 import { Component } from '@angular/core';
 
-import { actions } from "./actions/index";
-import { MessageActions } from "./actions/message.actions";
-
-import { AppDispatcher } from './app.dispatcher';
-import { AppStore, AppState } from './app.store';
-import { ThreadStore } from './thread.store';
-import { MessageStore } from './message.store';
 import { Thread } from './thread';
 import { Message } from './message';
+
+import { actions } from './actions/index';
+import { MessageActions } from './actions/message.actions';
+import { ThreadActions } from './actions/thread.actions';
+
+import { AppDispatcher } from './app.dispatcher';
+import { AppStore } from './app.store';
+import { MessageStore } from './message.store';
+import { ThreadStore } from './thread.store';
 
 @Component({
   selector: 'fc-app',
@@ -28,6 +30,8 @@ import { Message } from './message';
         <li
           *ngFor="let _thread of threads"
           class="thread-list-item"
+          [class.active]="_thread.id === threadId"
+          (click)="onClickThread(_thread)"
         >
           <h5 class="thread-name">{{_thread?.name}}</h5>
           <div class="thread-time">
@@ -58,21 +62,29 @@ import { Message } from './message';
 })
 export class AppComponent {
 
-  private threads: Thread[];
-  private thread: Thread;
   private messages: Message[];
+  private thread: Thread;
+  private threadId: string;
+  private threads: Thread[];
 
   constructor(private dispatcher: AppDispatcher,
-              private threadStore: ThreadStore,
+              private appStore: AppStore,
+              private messageActions: MessageActions,
               private messageStore: MessageStore,
-              private messageActions: MessageActions) {
-    this.threadStore.getAllChrono((s) => this.threads = s);
-    this.threadStore.getCurrent((s) => this.thread = s);
-    this.messageStore.getAllForCurrentThread((s) => this.messages = s);
+              private threadActions: ThreadActions,
+              private threadStore: ThreadStore) {
+    this.messageStore.getAllForCurrentThread().subscribe((s) => this.messages = s);
+    this.threadStore .getCurrent()            .subscribe((s) => this.thread = s);
+    this.threadStore .getId()                 .subscribe((s) => this.threadId = s);
+    this.threadStore .getAllChrono()          .subscribe((s) => this.threads = s);
   }
 
   ngOnInit() {
     this.dispatcher.emit(this.messageActions.getAllMessages())
+  }
+
+  onClickThread(thread: Thread) {
+    this.dispatcher.emit(this.threadActions.clickThread(thread.id));
   }
 
 }

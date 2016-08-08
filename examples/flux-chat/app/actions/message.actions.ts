@@ -10,11 +10,11 @@ import { Threads } from '../threads';
 function convertRawMessage(message: RawMessage, currentThreadID: string | undefined): Message {
   return {
     id: message.id,
-    threadID: message.threadID,
+    threadId: message.threadId,
     authorName: message.authorName,
     date: new Date(message.timestamp),
     text: message.text,
-    isRead: message.threadID === currentThreadID
+    isRead: message.threadId === currentThreadID
   };
 }
 
@@ -45,13 +45,13 @@ export class MessageActions extends Action<AppState> {
       const rawMessages = JSON.parse(localStorage.getItem('messages')) as RawMessage[];
 
       rawMessages.forEach((message) => {
-        var threadID = message.threadID;
-        var thread = state.threads && state.threads[threadID];
+        var threadId = message.threadId;
+        var thread = state.threads && state.threads[threadId];
         if (thread && message.timestamp < Math.floor(thread.lastMessage.date.getTime() / 1000)) {
           return;
         }
-        state.threads[threadID] = {
-          id: threadID,
+        state.threads[threadId] = {
+          id: threadId,
           name: message.threadName,
           lastMessage: convertRawMessage(message, state.threadId)
         };

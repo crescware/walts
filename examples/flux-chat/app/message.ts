@@ -1,6 +1,6 @@
 export class RawMessage {
   id: string;
-  threadID: string;
+  threadId: string;
   threadName: string;
   authorName: string;
   text: string;
@@ -9,7 +9,7 @@ export class RawMessage {
 
 export class Message {
   id: string;
-  threadID: string;
+  threadId: string;
   authorName: string;
   text: string;
   date: Date;

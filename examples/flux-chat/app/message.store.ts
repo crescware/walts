@@ -8,7 +8,7 @@ import { AppStore, AppState } from './app.store';
 
 function getAllForThread(state: AppState) {
   const threadMessages = Object.keys(state.messages).map((m) => {
-    if (state.messages[m].threadID === state.threadId) {
+    if (state.messages[m].threadId === state.threadId) {
       return state.messages[m];
     }
   });

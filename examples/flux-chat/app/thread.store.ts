@@ -30,23 +30,25 @@ export class ThreadStore extends AppStore {
     super(dispatcher);
   }
 
-  getCurrent(observer?: (s: Thread) => void): Observable<Thread> {
+  getId(): Observable<string> {
+    const subject = new Subject<string>();
+    this.observable.subscribe((state) => {
+      subject.next(state.threadId);
+    });
+    return subject;
+  }
+
+  getCurrent(): Observable<Thread> {
     const subject = new Subject<Thread>();
     this.observable.subscribe((state) => {
-      if (observer) {
-        observer(state.threads[state.threadId]);
-      }
       subject.next(state.threads[state.threadId]);
     });
     return subject;
   }
 
-  getAllChrono(observer?: (s: Thread[]) => void): Observable<Thread[]> {
+  getAllChrono(): Observable<Thread[]> {
     const subject = new Subject<Thread[]>();
     this.observable.subscribe((state) => {
-      if (observer) {
-        observer(getAllChrono(state.threads));
-      }
       subject.next(getAllChrono(state.threads));
     });
     return subject;
