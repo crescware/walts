@@ -33,6 +33,19 @@ function getAllChrono(threads: Threads): Thread[] {
   });
 }
 
+function getCreatedMessageData(text: string, currentThreadId: string): Message {
+  const timestamp = Date.now();
+
+  return {
+    id: 'm_' + timestamp,
+    threadId: currentThreadId,
+    authorName: 'Bill', // hard coded for the example
+    date: new Date(timestamp),
+    text: text,
+    isRead: true
+  };
+}
+
 @Injectable()
 export class MessageActions extends Action<AppState> {
 
@@ -76,6 +89,32 @@ export class MessageActions extends Action<AppState> {
         messages
       } as AppState;
     };
+  }
+
+  createMessage(text: string) {
+    return this.combine([
+      (state) => {
+        const message = getCreatedMessageData(text, state.threadId);
+
+        // simulate writing to a database
+        const rawMessages = JSON.parse(localStorage.getItem('messages'));
+        const timestamp = Date.now();
+        const id = 'm_' + timestamp;
+        const threadId = message.threadId || ('t_' + Date.now());
+        const createdMessage = {
+          id: id,
+          threadId: threadId,
+          threadName: '',
+          authorName: message.authorName,
+          text: message.text,
+          timestamp: timestamp
+        };
+        rawMessages.push(createdMessage);
+        localStorage.setItem('messages', JSON.stringify(rawMessages));
+        return state;
+      },
+      this.getAllMessages()
+    ])
   }
 
 }

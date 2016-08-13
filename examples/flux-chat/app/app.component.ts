@@ -55,7 +55,13 @@ import { ThreadStore } from './thread.store';
           <div class="message-text">{{message?.text}}</div>
         </li>
       </ul>
-      <textarea name="message" id="message-composer" class="message-composer"></textarea>
+      <textarea
+        name="message"
+        id="message-composer"
+        class="message-composer"
+        (keydown)="onKeydown($event)"
+        [(ngModel)]="message"
+      ></textarea>
     </div>
   </div>
   `
@@ -66,6 +72,7 @@ export class AppComponent {
   private thread: Thread;
   private threadId: string;
   private threads: Thread[];
+  private message: string;
 
   constructor(private dispatcher: AppDispatcher,
               private appStore: AppStore,
@@ -85,6 +92,17 @@ export class AppComponent {
 
   onClickThread(thread: Thread) {
     this.dispatcher.emit(this.threadActions.clickThread(thread.id));
+  }
+
+  onKeydown(event: KeyboardEvent) {
+    if (event.keyCode === 13 /* ENTER */) {
+      event.preventDefault();
+      var text = this.message.trim();
+      if (text) {
+        this.dispatcher.emit(this.messageActions.createMessage(text));
+      }
+      this.message = '';
+    }
   }
 
 }
