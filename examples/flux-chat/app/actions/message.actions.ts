@@ -7,17 +7,6 @@ import { Thread } from '../thread';
 import { Messages } from '../messages';
 import { Threads } from '../threads';
 
-function convertRawMessage(message: RawMessage, currentThreadID: string | undefined): Message {
-  return {
-    id: message.id,
-    threadId: message.threadId,
-    authorName: message.authorName,
-    date: new Date(message.timestamp),
-    text: message.text,
-    isRead: message.threadId === currentThreadID
-  };
-}
-
 function getAllChrono(threads: Threads): Thread[] {
   const orderedThreads = Object.keys(threads).map((id) => {
     return threads[id];
@@ -31,19 +20,6 @@ function getAllChrono(threads: Threads): Thread[] {
     }
     return 0;
   });
-}
-
-function getCreatedMessageData(text: string, currentThreadId: string): Message {
-  const timestamp = Date.now();
-
-  return {
-    id: 'm_' + timestamp,
-    threadId: currentThreadId,
-    authorName: 'Bill', // hard coded for the example
-    date: new Date(timestamp),
-    text: text,
-    isRead: true
-  };
 }
 
 @Injectable()
@@ -66,7 +42,7 @@ export class MessageActions extends Action<AppState> {
         state.threads[threadId] = {
           id: threadId,
           name: message.threadName,
-          lastMessage: convertRawMessage(message, state.threadId)
+          lastMessage: Message.convertRawMessage(message, state.threadId)
         };
       });
 
@@ -82,7 +58,7 @@ export class MessageActions extends Action<AppState> {
         if (messages[m.id]) {
           return;
         }
-        messages[m.id] = convertRawMessage(m, state.threadId);
+        messages[m.id] = Message.convertRawMessage(m, state.threadId);
       });
 
       return {
@@ -94,7 +70,7 @@ export class MessageActions extends Action<AppState> {
   createMessage(text: string) {
     return this.combine([
       (state) => {
-        const message = getCreatedMessageData(text, state.threadId);
+        const message = Message.getCreatedMessageData(text, state.threadId);
 
         // simulate writing to a database
         const rawMessages = JSON.parse(localStorage.getItem('messages'));
