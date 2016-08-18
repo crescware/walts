@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Action, Next } from 'walts';
+import { Actions, Action } from 'walts';
 
 import { AppState } from '../app.store';
 
@@ -12,13 +12,13 @@ function _markAllInThreadRead(state: AppState) {
 }
 
 @Injectable()
-export class ThreadActions extends Action<AppState> {
+export class ThreadActions extends Actions<AppState> {
 
   constructor() {
     super();
   }
 
-  clickThread(threadId: string): Next<AppState> {
+  clickThread(threadId: string): Action<AppState> {
     return (state) => {
       state.threadId = threadId;
       state.threads[state.threadId].lastMessage.isRead = true;

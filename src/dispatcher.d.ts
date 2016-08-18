@@ -1,8 +1,8 @@
-import { Next, Processor } from './action';
+import { MixedAction, Processor } from './actions';
 import { State } from './store';
 
 export declare class Dispatcher<ST extends State> {
-  emit(next: Next<ST> | Next<ST>[]): void;
-  emitAll(nexts: Next<ST>[]): void;
+  emit(action: MixedAction<ST> | MixedAction<ST>[]): void;
+  emitAll(actions: MixedAction<ST>[]): void;
   subscribe(observer: (processor: Processor<ST>) => void): void;
 }

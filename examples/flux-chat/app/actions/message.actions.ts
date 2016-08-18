@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Action, Next } from 'walts';
+import { Actions, Action } from 'walts';
 
 import { AppState } from '../app.store';
 import { RawMessage, Message } from '../message';
@@ -23,13 +23,13 @@ function getAllChrono(threads: Threads): Thread[] {
 }
 
 @Injectable()
-export class MessageActions extends Action<AppState> {
+export class MessageActions extends Actions<AppState> {
 
   constructor() {
     super();
   }
 
-  getAllMessages(): Next<AppState> {
+  getAllMessages(): Action<AppState> {
     return (state) => {
       const rawMessages = JSON.parse(localStorage.getItem('messages')) as RawMessage[];
 

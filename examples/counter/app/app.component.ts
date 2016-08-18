@@ -1,17 +1,6 @@
 import { Component } from '@angular/core';
 
-import { actions } from './actions/index';
-import { IncrementAAction } from './actions/increment-a.action';
-import { IncrementBAction } from './actions/increment-b.action';
-import { MultiplyAAction } from './actions/multiply-a.action';
-import { MultiplyBAction } from './actions/multiply-b.action';
-import { NestedCombileAction } from './actions/nested-combine.action';
-import { Plus1Times2BAction } from './actions/plus1times2-b.action';
-import { ResetAction } from './actions/reset.action';
-import { SyncThrowAction } from './actions/sync-throw.action';
-import { Times2Plus1BAction } from './actions/times2plus1-b.action';
-import { Wait1SecAndThrowAction } from './actions/wait1sec-and-throw.action';
-
+import { AppActions } from './app.actions';
 import { AppDispatcher } from './app.dispatcher';
 import { AppStore, AppState } from './app.store';
 
@@ -19,7 +8,7 @@ import { AppStore, AppState } from './app.store';
   selector: 'ex-app',
   directives: [],
   providers: [
-    actions,
+    AppActions,
     AppDispatcher,
     AppStore
   ],
@@ -46,16 +35,7 @@ export class AppComponent {
 
   constructor(private dispatcher: AppDispatcher,
               private store: AppStore,
-              private incrementA: IncrementAAction,
-              private incrementB: IncrementBAction,
-              private multiplyA: MultiplyAAction,
-              private multiplyB: MultiplyBAction,
-              private nested: NestedCombileAction,
-              private plus1Times2B: Plus1Times2BAction,
-              private reset: ResetAction,
-              private syncThrow: SyncThrowAction,
-              private times2Plus1B: Times2Plus1BAction,
-              private wait1SecAndThrow: Wait1SecAndThrowAction) {
+              private actions: AppActions) {
     this.store.observable.subscribe((state) => {
       console.log(state);
       this.state = state;
@@ -65,68 +45,68 @@ export class AppComponent {
   }
 
   onClickIncrementA() {
-    this.dispatcher.emit(this.incrementA.create(1));
+    this.dispatcher.emit(this.actions.incrementA(1));
   }
 
   onClickMultiplyA() {
-    this.dispatcher.emit(this.multiplyA.create(3));
+    this.dispatcher.emit(this.actions.multiplyA(3));
   }
 
   onClickPlus1Times2A() {
     this.dispatcher.emitAll([
-      this.incrementA.create(1),
-      this.multiplyA.create(2)
+      this.actions.incrementA(1),
+      this.actions.multiplyA(2)
     ]);
   }
 
   onClickTimes2Plus1A() {
     this.dispatcher.emitAll([
-      this.multiplyA.create(2),
-      this.incrementA.create(1)
+      this.actions.multiplyA(2),
+      this.actions.incrementA(1)
     ]);
   }
 
   onClickIncrementB() {
-    this.dispatcher.emit(this.incrementB.create(1));
+    this.dispatcher.emit(this.actions.incrementB(1));
   }
 
   onClickIncrementBSequence() {
     this.dispatcher.emitAll([
-      this.incrementB.create(1),
-      this.multiplyB.create(2),
-      this.incrementB.create(3)
+      this.actions.incrementB(1),
+      this.actions.multiplyB(2),
+      this.actions.incrementB(3)
     ]);
   }
 
   onClickIncrementBSimul() {
-    this.dispatcher.emit(this.incrementB.create(1));
-    this.dispatcher.emit(this.multiplyB.create(2));
-    this.dispatcher.emit(this.incrementB.create(3));
+    this.dispatcher.emit(this.actions.incrementB(1));
+    this.dispatcher.emit(this.actions.multiplyB(2));
+    this.dispatcher.emit(this.actions.incrementB(3));
   }
 
   onClickPlus1Times2B() {
-    this.dispatcher.emit(this.plus1Times2B.create());
+    this.dispatcher.emit(this.actions.plus1Times2B());
   }
 
   onClickTimes2Plus1B() {
-    this.dispatcher.emit(this.times2Plus1B.create());
+    this.dispatcher.emit(this.actions.times2Plus1B());
   }
 
   onClickNested() {
-    this.dispatcher.emit(this.nested.create());
+    this.dispatcher.emit(this.actions.nestedCombineAction());
   }
 
   onClickReset() {
-    this.dispatcher.emit(this.reset.create());
+    this.dispatcher.emit(this.actions.reset());
   }
 
   onClickAsyncThrow() {
-    this.dispatcher.emit(this.wait1SecAndThrow.create());
+    this.dispatcher.emit(this.actions.wait1secAndThrow());
   }
 
   onClickSyncThrow() {
     try {
-      this.dispatcher.emit(this.syncThrow.create());
+      this.dispatcher.emit(this.actions.syncThrow());
     } catch(err) {
       console.error('Caught the error.', err);
     }

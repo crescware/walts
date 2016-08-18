@@ -15,7 +15,7 @@
     ],
     "files": [
         "index.ts",
-        "src/action.ts",
+        "src/actions.ts",
         "src/dispatcher.ts",
         "src/store.ts",
         "node_modules/typescript/lib/lib.es6.d.ts"

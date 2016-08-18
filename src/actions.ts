@@ -1,15 +1,15 @@
 import { State } from './store';
 
-export type SyncNext<ST extends State> = (state: ST) => ST
-export type AsyncNext<ST extends State> =  Promise<(state: ST) => ST>;
-export type Next<ST extends State> = SyncNext<ST> | AsyncNext<ST>;
+export type SyncAction<ST extends State> = (state: ST) => ST
+export type AsyncAction<ST extends State> =  Promise<(state: ST) => ST>;
+export type Action<ST extends State> = SyncAction<ST> | AsyncAction<ST>;
 export type Processor<ST extends State> = (p: Promise<ST>) => Promise<ST>;
 
 interface RecursiveArray<T> extends Array<T | RecursiveArray<T>> {}
 
-export class Action<ST extends State> {
+export class Actions<ST extends State> {
 
-  protected combine(...nexts: Array<Next<ST> | RecursiveArray<Next<ST>>>): Next<ST>[] {
+  protected combine(...nexts: Array<Action<ST> | RecursiveArray<Action<ST>>>): Action<ST>[] {
     let flatten = <T>(array: Array<T | RecursiveArray<T>>): Array<T | RecursiveArray<T>> => {
       return array.reduce<Array<T | RecursiveArray<T>>>((p: Array<T | RecursiveArray<T>>, c: T | RecursiveArray<T>) => {
         return Array.isArray(c)
@@ -18,7 +18,7 @@ export class Action<ST extends State> {
       }, []);
     };
 
-    return flatten<Next<ST>>(nexts) as Next<ST>[];
+    return flatten<Action<ST>>(nexts) as Action<ST>[];
   }
 
 }
