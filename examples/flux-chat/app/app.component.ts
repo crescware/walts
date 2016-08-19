@@ -3,7 +3,6 @@ import { Component } from '@angular/core';
 import { Thread } from './thread';
 import { Message } from './message';
 
-import { actions } from './actions/index';
 import { MessageActions } from './actions/message.actions';
 import { ThreadActions } from './actions/thread.actions';
 
@@ -14,14 +13,6 @@ import { ThreadStore } from './thread.store';
 
 @Component({
   selector: 'fc-app',
-  directives: [],
-  providers: [
-    actions,
-    AppDispatcher,
-    AppStore,
-    ThreadStore,
-    MessageStore
-  ],
   template: `
   <div class="chatapp">
     <div class="thread-section">

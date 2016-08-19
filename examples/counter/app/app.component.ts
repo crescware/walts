@@ -6,12 +6,6 @@ import { AppStore, AppState } from './app.store';
 
 @Component({
   selector: 'ex-app',
-  directives: [],
-  providers: [
-    AppActions,
-    AppDispatcher,
-    AppStore
-  ],
   template: `
     <h1>A: {{state?.counterA}} B: {{state?.counterB}}</h1>
     <button (click)="onClickIncrementA()">A +1</button>
