@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 
-import { Thread } from './thread';
-import { Message } from './message';
+import { Thread } from './domain/thread';
+import { Message } from './domain/message';
 
 import { MessageActions } from './actions/message.actions';
 import { ThreadActions } from './actions/thread.actions';
@@ -10,6 +10,8 @@ import { AppDispatcher } from './app.dispatcher';
 import { AppStore } from './app.store';
 import { MessageStore } from './message.store';
 import { ThreadStore } from './thread.store';
+import {MessageVM} from "./ui/message.vm";
+import {ThreadVM} from "./ui/thread.vm";
 
 @Component({
   selector: 'fc-app',
@@ -21,15 +23,15 @@ import { ThreadStore } from './thread.store';
         <li
           *ngFor="let _thread of threads"
           class="thread-list-item"
-          [class.active]="_thread.id === threadId"
+          [class.active]="_thread?.id === threadId"
           (click)="onClickThread(_thread)"
         >
           <h5 class="thread-name">{{_thread?.name}}</h5>
           <div class="thread-time">
-            {{_thread?.lastMessage?.date?.toLocaleTimeString()}}
+            {{_thread?.lastMessageDate}}
           </div>
           <div class="thread-last-message">
-            {{_thread?.lastMessage?.text}}
+            {{_thread?.lastMessageText}}
           </div>
         </li>
       </ul>
@@ -42,7 +44,7 @@ import { ThreadStore } from './thread.store';
           class="message-list-item"
         >
           <h5 class="message-author-name">{{message?.authorName}}</h5>
-          <div class="message-time">{{message?.date?.toLocaleTimeString()}}</div>
+          <div class="message-time">{{message?.date}}</div>
           <div class="message-text">{{message?.text}}</div>
         </li>
       </ul>
@@ -59,10 +61,10 @@ import { ThreadStore } from './thread.store';
 })
 export class AppComponent {
 
-  private messages: Message[];
-  private thread: Thread;
+  private messages: MessageVM[];
+  private thread: ThreadVM;
   private threadId: string;
-  private threads: Thread[];
+  private threads: ThreadVM[];
   private message: string;
 
   constructor(private dispatcher: AppDispatcher,
@@ -71,6 +73,9 @@ export class AppComponent {
               private messageStore: MessageStore,
               private threadActions: ThreadActions,
               private threadStore: ThreadStore) {
+    this.appStore.observable.subscribe((state) => {
+      console.log(state);
+    });
     this.messageStore.getAllForCurrentThread().subscribe((s) => this.messages = s);
     this.threadStore .getCurrent()            .subscribe((s) => this.thread = s);
     this.threadStore .getId()                 .subscribe((s) => this.threadId = s);
@@ -78,7 +83,10 @@ export class AppComponent {
   }
 
   ngOnInit() {
-    this.dispatcher.emit(this.messageActions.getAllMessages())
+    this.dispatcher.emitAll([
+      this.messageActions.getAllMessages(),
+      this.threadActions.getAllThreads(),
+    ])
   }
 
   onClickThread(thread: Thread) {

@@ -8,6 +8,8 @@ import { AppStore } from './app.store';
 import { actions } from './actions/index';
 import { ThreadStore } from './thread.store';
 import { MessageStore } from './message.store';
+import {MessageRepository} from "./domain/message.repository";
+import {ThreadRepository} from "./domain/thread.repository";
 
 @NgModule({
   imports: [
@@ -22,7 +24,9 @@ import { MessageStore } from './message.store';
     AppDispatcher,
     AppStore,
     ThreadStore,
-    MessageStore
+    MessageStore,
+    MessageRepository,
+    ThreadRepository
   ],
   bootstrap: [AppComponent]
 })

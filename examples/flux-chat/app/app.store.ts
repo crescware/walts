@@ -1,20 +1,20 @@
 import { Injectable } from '@angular/core';
 import { State, Store } from 'walts';
 
-import { Threads } from './threads';
-import { Messages } from './messages';
+import { Thread } from './domain/thread';
 import { AppDispatcher } from './app.dispatcher';
+import {Message} from "./domain/message";
 
 export class AppState extends State {
   threadId: string;
-  threads: Threads;
-  messages: Messages;
+  threads: Thread[];
+  messages: Message[];
 }
 
 const INIT_STATE: AppState = {
   threadId: '',
-  threads: {},
-  messages: {}
+  threads: [],
+  messages: []
 };
 
 @Injectable()

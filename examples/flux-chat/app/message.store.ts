@@ -2,16 +2,14 @@ import { Injectable } from '@angular/core';
 import { Observable, Subject } from 'rxjs/Rx';
 import { State, Store } from 'walts';
 
-import { Message } from './message';
 import { AppDispatcher } from './app.dispatcher';
 import { AppStore, AppState } from './app.store';
+import {MessageVM} from "./ui/message.vm";
+import {Message} from "./domain/message";
 
-function getAllForThread(state: AppState) {
-  const threadMessages = Object.keys(state.messages).map((m) => {
-    if (state.messages[m].threadId === state.threadId) {
-      return state.messages[m];
-    }
-  });
+
+function getAllForThread(threadId: string, messages: Message[]): MessageVM[] {
+  const threadMessages = messages.filter((m) => m.threadId === threadId);
 
   threadMessages.sort((a, b) => {
     if (a.date < b.date) {
@@ -22,7 +20,13 @@ function getAllForThread(state: AppState) {
     return 0;
   });
 
-  return threadMessages;
+  return threadMessages.map((m) => {
+    return new MessageVM(
+      m.authorName,
+      m.text,
+      m.date.toLocaleDateString()
+    );
+  });
 }
 
 @Injectable()
@@ -32,15 +36,10 @@ export class MessageStore extends AppStore {
     super(dispatcher);
   }
 
-  getAllForCurrentThread(observer?: (s: Message[]) => void): Observable<Message[]> {
-    const subject = new Subject<Message[]>();
-    this.observable.subscribe((state) => {
-      if (observer) {
-        observer(getAllForThread(state));
-      }
-      subject.next(getAllForThread(state));
+  getAllForCurrentThread(): Observable<MessageVM[]> {
+    return this.observable.map((state) => {
+      return getAllForThread(state.threadId, state.messages);
     });
-    return subject;
   }
 
 }

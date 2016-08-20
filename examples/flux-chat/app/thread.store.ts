@@ -2,16 +2,13 @@ import { Injectable } from '@angular/core';
 import { Observable, Subject } from 'rxjs/Rx';
 import { State, Store } from 'walts';
 
-import { Thread } from './thread';
-import { Threads } from './threads';
-import { Messages } from './messages';
+import { Thread } from './domain/thread';
 import { AppDispatcher } from './app.dispatcher';
 import { AppStore } from './app.store';
+import {ThreadVM} from "./ui/thread.vm";
 
-function getAllChrono(threads: Threads): Thread[] {
-  const orderedThreads = Object.keys(threads).map((id) => {
-    return threads[id];
-  }).filter((thread) => !!thread);
+function getAllChrono(threads: Thread[]): ThreadVM[] {
+  const orderedThreads = threads.filter((t) => !!t);
 
   return orderedThreads.sort((a, b) => {
     if (a.lastMessage.date < b.lastMessage.date) {
@@ -20,6 +17,13 @@ function getAllChrono(threads: Threads): Thread[] {
       return 1;
     }
     return 0;
+  }).map((t) => {
+    return new ThreadVM(
+      t.id,
+      t.name,
+      t.lastMessage.date.toLocaleDateString(),
+      t.lastMessage.text
+    );
   });
 }
 
@@ -38,20 +42,34 @@ export class ThreadStore extends AppStore {
     return subject;
   }
 
-  getCurrent(): Observable<Thread> {
-    const subject = new Subject<Thread>();
-    this.observable.subscribe((state) => {
-      subject.next(state.threads[state.threadId]);
+  getCurrent(): Observable<ThreadVM> {
+    return this.observable.map((state) => {
+      if (!state.threads || state.threads.length < 1) {
+        return {} as ThreadVM;
+      }
+
+      const thread = state.threads.find((t) => t.id === state.threadId);
+      if (!thread) {
+        return {} as ThreadVM;
+      }
+
+      return new ThreadVM(
+        thread.id,
+        thread.name,
+        thread.lastMessage.date.toLocaleDateString(),
+        thread.lastMessage.text
+      );
     });
-    return subject;
   }
 
-  getAllChrono(): Observable<Thread[]> {
-    const subject = new Subject<Thread[]>();
-    this.observable.subscribe((state) => {
-      subject.next(getAllChrono(state.threads));
+  getAllChrono(): Observable<ThreadVM[]> {
+    return this.observable.map((state) => {
+      if (!state.threads || state.threads.length < 1) {
+        return [{}] as ThreadVM[];
+      }
+
+      return getAllChrono(state.threads);
     });
-    return subject;
   }
 
 }
