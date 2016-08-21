@@ -1,7 +1,6 @@
 import { Component } from '@angular/core';
 
 import { Thread } from './domain/thread';
-import { Message } from './domain/message';
 
 import { MessageActions } from './actions/message.actions';
 import { ThreadActions } from './actions/thread.actions';
