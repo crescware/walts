@@ -49,16 +49,15 @@ describe('Integration', () => {
 
       const value = 1;
 
-      store.observable
-        .map<{st: TestState; i: number}>((st, i) => {
-          return {st, i};
-        })
-        .filter((data) => 1 === data.i)
-        .subscribe((data) => {
-          assert(data.st.a === initState.a + value);
-          assert(data.st.b === initState.b);
+      let i = 0;
+      store.observable.subscribe((st) => {
+        if (i === 1) {
+          assert(st.a === initState.a + value);
+          assert(st.b === initState.b);
           done();
-        });
+        }
+      });
+
       dispatcher.emit(actions.addToA(value));
     });
 
@@ -66,21 +65,40 @@ describe('Integration', () => {
       const dispatcher = new TestDispatcher();
       const store      = new TestStore(dispatcher);
 
-      store.observable
-        .map<{st: TestState; i: number}>((st, i) => {
-          return {st, i};
-        })
-        .filter((data) => 1 === data.i)
-        .subscribe((data) => {
-          assert(data.st.a === 5);
-          assert(data.st.b === 4);
+      let i = 0;
+      store.observable.subscribe((st) => {
+        if (i === 1) {
+          assert(st.a === 5);
+          assert(st.b === 4);
           done();
-        });
+        }
+      });
+
       dispatcher.emitAll([
         actions.addToA(2),
         actions.addToB(3),
         actions.addToA(2),
       ]);
+    });
+
+    it.only('correctly continuous emit() to work', function(done) {
+      this.timeout(5000);
+
+      const dispatcher = new TestDispatcher();
+      const store      = new TestStore(dispatcher);
+
+      let i = 0;
+      store.observable.subscribe((st) => {
+        if (i === 0) { assert(st.a === 1); }
+        if (i === 1) { assert(st.a === 2); }
+        if (i === 2) { assert(st.a === 4); }
+        if (i === 3) { assert(st.a === 7); done(); }
+        i++;
+      });
+
+      setTimeout(() => dispatcher.emit(actions.addToA(1)), 1);
+      setTimeout(() => dispatcher.emit(actions.addToA(2)), 2);
+      setTimeout(() => dispatcher.emit(actions.addToA(3)), 3);
     });
   });
 });
