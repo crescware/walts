@@ -11,6 +11,8 @@
         "!*.d.ts",
         "src/**/*.ts",
         "!src/**/*.d.ts",
+        "test/**/*.ts",
+        "typings/index.d.ts",
         "node_modules/typescript/lib/lib.es6.d.ts"
     ],
     "files": [
@@ -18,6 +20,8 @@
         "src/actions.ts",
         "src/dispatcher.ts",
         "src/store.ts",
+        "test/test.ts",
+        "typings/index.d.ts",
         "node_modules/typescript/lib/lib.es6.d.ts"
     ]
 }
