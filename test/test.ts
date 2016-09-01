@@ -83,9 +83,7 @@ describe('Integration', () => {
       ]);
     });
 
-    it('correctly continuous emit() to work', function(done) {
-      this.timeout(5000);
-
+    it('correctly continuous emit() to work', (done) => {
       const dispatcher = new TestDispatcher();
       const store      = new TestStore(dispatcher);
 
@@ -101,6 +99,60 @@ describe('Integration', () => {
       setTimeout(() => dispatcher.emit(actions.addToA(1)), 1);
       setTimeout(() => dispatcher.emit(actions.addToA(2)), 2);
       setTimeout(() => dispatcher.emit(actions.addToA(3)), 3);
+    });
+
+    it('correctly continuous emitAll() to work', (done) => {
+      const dispatcher = new TestDispatcher();
+      const store      = new TestStore(dispatcher);
+
+      let i = 0;
+      store.observable.subscribe((st) => {
+        if (i === 0) { assert(st.a === 1); }
+        if (i === 1) { assert(st.a === 4); }
+        if (i === 2) { assert(st.a === 11); }
+        if (i === 3) { assert(st.a === 22); done(); }
+        i++;
+      });
+
+      setTimeout(() => dispatcher.emitAll([actions.addToA(1), actions.addToA(2)]), 1);
+      setTimeout(() => dispatcher.emitAll([actions.addToA(3), actions.addToA(4)]), 2);
+      setTimeout(() => dispatcher.emitAll([actions.addToA(5), actions.addToA(6)]), 3);
+    });
+
+    it('correctly continuous emit() and calculate to multiple properties to work', (done) => {
+      const dispatcher = new TestDispatcher();
+      const store      = new TestStore(dispatcher);
+
+      let i = 0;
+      store.observable.subscribe((st) => {
+        if (i === 0) { assert(st.a === 1); assert(st.b === 1); }
+        if (i === 1) { assert(st.a === 2); assert(st.b === 1); }
+        if (i === 2) { assert(st.a === 2); assert(st.b === 3); }
+        if (i === 3) { assert(st.a === 5); assert(st.b === 3); done(); }
+        i++;
+      });
+
+      setTimeout(() => dispatcher.emit(actions.addToA(1)), 1);
+      setTimeout(() => dispatcher.emit(actions.addToB(2)), 2);
+      setTimeout(() => dispatcher.emit(actions.addToA(3)), 3);
+    });
+
+    it('correctly continuous emitAll() and calculate to multiple properties to work', (done) => {
+      const dispatcher = new TestDispatcher();
+      const store      = new TestStore(dispatcher);
+
+      let i = 0;
+      store.observable.subscribe((st) => {
+        if (i === 0) { assert(st.a === 1);  assert(st.b === 1); }
+        if (i === 1) { assert(st.a === 2);  assert(st.b === 3); }
+        if (i === 2) { assert(st.a === 5);  assert(st.b === 7); }
+        if (i === 3) { assert(st.a === 10); assert(st.b === 13); done(); }
+        i++;
+      });
+
+      setTimeout(() => dispatcher.emitAll([actions.addToA(1), actions.addToB(2)]), 1);
+      setTimeout(() => dispatcher.emitAll([actions.addToA(3), actions.addToB(4)]), 2);
+      setTimeout(() => dispatcher.emitAll([actions.addToA(5), actions.addToB(6)]), 3);
     });
   });
 });
