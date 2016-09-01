@@ -56,6 +56,7 @@ describe('Integration', () => {
           assert(st.b === initState.b);
           done();
         }
+        i++;
       });
 
       dispatcher.emit(actions.addToA(value));
@@ -72,6 +73,7 @@ describe('Integration', () => {
           assert(st.b === 4);
           done();
         }
+        i++;
       });
 
       dispatcher.emitAll([
@@ -81,7 +83,7 @@ describe('Integration', () => {
       ]);
     });
 
-    it.only('correctly continuous emit() to work', function(done) {
+    it('correctly continuous emit() to work', function(done) {
       this.timeout(5000);
 
       const dispatcher = new TestDispatcher();
