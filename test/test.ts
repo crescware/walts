@@ -155,4 +155,52 @@ describe('Integration', () => {
       setTimeout(() => dispatcher.emitAll([actions.addToA(5), actions.addToB(6)]), 3);
     });
   });
+
+  describe('Async', () => {
+    interface TestState {
+      a: number;
+      b: number;
+    }
+
+    class TestActions extends Actions<TestState> {
+      addToAAfter2Sec(n: number): Promise<Action<TestState>> {
+        return new Promise((resolve) => {
+          resolve((st) => {
+            return {
+              a: st.a + n
+            } as TestState;
+          });
+        });
+      }
+      addToA(n: number): Action<TestState> {
+        return (st) => {
+          return {
+            a: st.a + n
+          } as TestState;
+        };
+      }
+
+      addToB(n: number): Action<TestState> {
+        return (st) => {
+          return {
+            b: st.b + n
+          } as TestState;
+        };
+      }
+    }
+
+    const actions = new TestActions();
+
+    class TestDispatcher extends Dispatcher<TestState> {}
+
+    const initState: TestState = {
+      a: 1,
+      b: 1
+    };
+    class TestStore extends Store<TestState> {
+      constructor(dispatcher: TestDispatcher) {
+        super(initState, dispatcher);
+      }
+    }
+  });
 });
