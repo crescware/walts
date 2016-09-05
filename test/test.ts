@@ -155,4 +155,108 @@ describe('Integration', () => {
       setTimeout(() => dispatcher.emitAll([actions.addToA(5), actions.addToB(6)]), 3);
     });
   });
+
+  describe('Async', () => {
+    interface TestState {
+      a: number;
+      b: number;
+    }
+
+    class TestActions extends Actions<TestState> {
+      addToAAfter2Sec(n: number): Promise<Action<TestState>> {
+        return new Promise((resolve) => {
+          resolve((st: TestState) => {
+            return {
+              a: st.a + n
+            } as TestState;
+          });
+        });
+      }
+      addToA(n: number): Action<TestState> {
+        return (st) => {
+          return {
+            a: st.a + n
+          } as TestState;
+        };
+      }
+    }
+
+    const actions = new TestActions();
+
+    class TestDispatcher extends Dispatcher<TestState> {}
+
+    const initState: TestState = {
+      a: 1,
+      b: 1
+    };
+    class TestStore extends Store<TestState> {
+      constructor(dispatcher: TestDispatcher) {
+        super(initState, dispatcher);
+      }
+    }
+
+    it('correctly emit() to work', (done) => {
+      const dispatcher = new TestDispatcher();
+      const store      = new TestStore(dispatcher);
+
+      const value = 1;
+
+      let i = 0;
+      store.observable.subscribe((st) => {
+        if (i === 1) {
+          assert(st.a === initState.a + value);
+          assert(st.b === initState.b);
+          done();
+        }
+        i++;
+      });
+
+      dispatcher.emit(actions.addToAAfter2Sec(value));
+    });
+
+    it('correctly SyncAction -> AsyncAction to work', (done) => {
+      const dispatcher = new TestDispatcher();
+      const store      = new TestStore(dispatcher);
+
+      const value = 1;
+
+      let i = 0;
+      store.observable.subscribe((st) => {
+        if (i === 1) {
+          assert(st.a === initState.a + value + value);
+          assert(st.b === initState.b);
+          done();
+        }
+        i++;
+      });
+
+      dispatcher.emitAll([
+        actions.addToA(value),
+        actions.addToAAfter2Sec(value)
+      ]);
+    });
+
+    it('correctly AsyncAction -> SyncAction to work', (done) => {
+      const dispatcher = new TestDispatcher();
+      const store      = new TestStore(dispatcher);
+
+      const value = 1;
+
+      let i = 0;
+      store.observable.subscribe((st) => {
+        if (i === 1) {
+          assert(st.a === initState.a + value + value);
+          assert(st.b === initState.b);
+          done();
+        }
+        i++;
+      });
+
+      dispatcher.emitAll([
+        actions.addToAAfter2Sec(value),
+        actions.addToA(value)
+      ]);
+    });
+
+  });
 });
