@@ -165,7 +165,7 @@ describe('Integration', () => {
     class TestActions extends Actions<TestState> {
       addToAAfter2Sec(n: number): Promise<Action<TestState>> {
         return new Promise((resolve) => {
-          resolve((st) => {
+          resolve((st: TestState) => {
             return {
               a: st.a + n
             } as TestState;
@@ -176,14 +176,6 @@ describe('Integration', () => {
         return (st) => {
           return {
             a: st.a + n
-          } as TestState;
-        };
-      }
-
-      addToB(n: number): Action<TestState> {
-        return (st) => {
-          return {
-            b: st.b + n
           } as TestState;
         };
       }
@@ -202,5 +194,69 @@ describe('Integration', () => {
         super(initState, dispatcher);
       }
     }
+
+    it('correctly emit() to work', (done) => {
+      const dispatcher = new TestDispatcher();
+      const store      = new TestStore(dispatcher);
+
+      const value = 1;
+
+      let i = 0;
+      store.observable.subscribe((st) => {
+        if (i === 1) {
+          assert(st.a === initState.a + value);
+          assert(st.b === initState.b);
+          done();
+        }
+        i++;
+      });
+
+      dispatcher.emit(actions.addToAAfter2Sec(value));
+    });
+
+    it('correctly SyncAction -> AsyncAction to work', (done) => {
+      const dispatcher = new TestDispatcher();
+      const store      = new TestStore(dispatcher);
+
+      const value = 1;
+
+      let i = 0;
+      store.observable.subscribe((st) => {
+        if (i === 1) {
+          assert(st.a === initState.a + value + value);
+          assert(st.b === initState.b);
+          done();
+        }
+        i++;
+      });
+
+      dispatcher.emitAll([
+        actions.addToA(value),
+        actions.addToAAfter2Sec(value)
+      ]);
+    });
+
+    it('correctly AsyncAction -> SyncAction to work', (done) => {
+      const dispatcher = new TestDispatcher();
+      const store      = new TestStore(dispatcher);
+
+      const value = 1;
+
+      let i = 0;
+      store.observable.subscribe((st) => {
+        if (i === 1) {
+          assert(st.a === initState.a + value + value);
+          assert(st.b === initState.b);
+          done();
+        }
+        i++;
+      });
+
+      dispatcher.emitAll([
+        actions.addToAAfter2Sec(value),
+        actions.addToA(value)
+      ]);
+    });
+
   });
 });
