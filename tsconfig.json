@@ -20,6 +20,7 @@
         "src/actions.ts",
         "src/dispatcher.ts",
         "src/store.ts",
+        "src/utils.ts",
         "test/test.ts",
         "typings/index.d.ts",
         "node_modules/typescript/lib/lib.es6.d.ts"

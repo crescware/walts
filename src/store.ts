@@ -1,6 +1,7 @@
 import { Observable } from 'rxjs/Observable';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 
+import { cloneDeep } from './utils';
 import { Dispatcher } from './dispatcher';
 
 export abstract class State {}
@@ -15,14 +16,16 @@ export class Store<ST extends State> {
     this.stateRef    = Object.assign({}, initState) as ST;
     this._observable = new BehaviorSubject<ST>(this.stateRef);
 
-    this.dispatcher.subscribe((processor) => {
-      const before = Promise.resolve(this.stateRef);
-      processor(before).then((after: ST) => {
-        this.stateRef = after;
-        this._observable.next(Object.assign({}, this.stateRef) as ST);
-      }).catch((err: any) => {
-        this._observable.error(err);
-      });
+    this.dispatcher.subscribeBegin((queue) => {
+      queue.next(cloneDeep<ST>(this.stateRef));
+    });
+    this.dispatcher.subscribeContinue((chunk) => {
+      this.stateRef = cloneDeep<ST>(Object.assign({}, this.stateRef, chunk.result));
+      chunk.queue.next(this.stateRef);
+    });
+    this.dispatcher.subscribeComplete((result) => {
+      this.stateRef = cloneDeep<ST>(Object.assign({}, this.stateRef, result));
+      this._observable.next(this.stateRef);
     });
   }
 
