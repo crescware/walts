@@ -1,9 +1,9 @@
 import { State } from './store';
 
-export type SyncAction<ST extends State> = (state: ST) => ST
-export type AsyncAction<ST extends State> =  Promise<(state: ST) => ST>;
-export type Action<ST extends State> = SyncAction<ST> | AsyncAction<ST>;
-export type Processor<ST extends State> = (p: Promise<ST>) => Promise<ST>;
+export type SyncAction <ST extends State> = (state: ST) => ST
+export type AsyncAction<ST extends State> = Promise<(state: ST) => ST>;
+export type Action     <ST extends State> = SyncAction<ST> | AsyncAction<ST>;
+export type Processor  <ST extends State> = (p: Promise<ST>) => Promise<ST>;
 
 interface RecursiveArray<T> extends Array<T | RecursiveArray<T>> {}
 
