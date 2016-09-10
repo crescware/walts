@@ -1,7 +1,7 @@
 import { Subject } from 'rxjs';
 import { isPromise as rxIsPromise } from 'rxjs/util/isPromise';
 
-import { SyncAction, AsyncAction } from './actions';
+import { Action, SyncAction, DelayedAction, AsyncAction, Delayed } from './actions';
 import { State } from './store';
 
 interface SubjectLike<ST> {
@@ -13,10 +13,10 @@ interface ResultChunk<ST> {
   queue: SubjectLike<ST>;
 }
 
-function finish<ST>(resolve: (st: ST) => void, complete$: Subject<ST>): SubjectLike<ST> {
+function finish<ST>(resolve: (st: ST) => void, complete$?: Subject<ST>): SubjectLike<ST> {
   return {
     next: (st: ST) => {
-      resolve(st);
+    resolve(st);
       if (complete$) {
         complete$.next(st);
       }
@@ -24,11 +24,19 @@ function finish<ST>(resolve: (st: ST) => void, complete$: Subject<ST>): SubjectL
   };
 }
 
-function isActions<ST>(v: SyncAction<ST> | AsyncAction<ST> | Array<SyncAction<ST> | AsyncAction<ST>>): v is Array<SyncAction<ST> | AsyncAction<ST>> {
+function isAction<ST>(v: ST | Action<ST> | Action<ST>[]): v is Action<ST> {
+  return typeof v === 'function';
+}
+
+function isActions<ST>(v: Action<ST> | Action<ST>[]): v is Action<ST>[] {
   return Array.isArray(v);
 }
 
-function isAsyncAction<ST>(v: SyncAction<ST> | AsyncAction<ST>): v is AsyncAction<ST> {
+function isAsyncAction<ST>(v: Action<ST>): v is AsyncAction<ST> {
+  return rxIsPromise(v);
+}
+
+function isDelayedAction<ST>(v: SyncAction<ST> | DelayedAction<ST>): v is DelayedAction<ST> {
   return rxIsPromise(v);
 }
 
@@ -38,11 +46,11 @@ export class Dispatcher<ST extends State> {
   private continue$ = new Subject<ResultChunk<ST>>();
   private complete$ = new Subject<ST>();
 
-  emit(action: SyncAction<ST> | AsyncAction<ST> | Array<SyncAction<ST> | AsyncAction<ST>>): void {
+  emit(action: Action<ST> | Action<ST>[]): void {
     this.emitImpl(action, this.complete$);
   }
 
-  emitAll(actions: Array<SyncAction<ST> | AsyncAction<ST>>): void {
+  emitAll(actions: Action<ST>[]): void {
     this.emitAllImpl(actions, this.complete$);
   }
 
@@ -64,14 +72,14 @@ export class Dispatcher<ST extends State> {
     });
   }
 
-  private emitImpl(action: SyncAction<ST> | AsyncAction<ST> | Array<SyncAction<ST> | AsyncAction<ST>>, complete$: Subject<ST>): Promise<ST> {
+  private emitImpl(action: Action<ST> | Action<ST>[], complete$?: Subject<ST>): Promise<ST> {
     if (isActions<ST>(action)) {
       return this.emitAllImpl(action, complete$);
     }
-    return this.emitAllImpl([action as SyncAction<ST> | AsyncAction<ST>], complete$);
+    return this.emitAllImpl([action as Action<ST>], complete$);
   }
 
-  private emitAllImpl(actions: Array<SyncAction<ST> | AsyncAction<ST>>, complete$: Subject<ST>): Promise<ST> {
+  private emitAllImpl(actions: Action<ST>[], complete$?: Subject<ST>): Promise<ST> {
     const promise = new Promise<ST>((resolve) => {
       const queues = actions.map((_) => new Subject<ST>());
 
@@ -91,13 +99,30 @@ export class Dispatcher<ST extends State> {
             return;
           }
 
-          this.continueNext((action as SyncAction<ST>)(state), nextQueue);
+          const syncOrDelayed = action as SyncAction<ST> | DelayedAction<ST>;
+          if (isDelayedAction<ST>(syncOrDelayed)) {
+            this.whenDelayed(syncOrDelayed(state as ST), nextQueue);
+            return;
+          }
+
+          this.continueNext((syncOrDelayed as SyncAction<ST>)(state), nextQueue);
         });
       });
 
       this.begin$.next(queues[0]);
     });
     return promise;
+  }
+
+  private whenDelayed(result: Delayed<ST>, nextQueue: SubjectLike<ST>) {
+    result.then((value) => {
+      if (isAction<ST>(value)) {
+        return this.emitImpl(value).then((v) => this.continueNext(v, nextQueue));
+      }
+      if (isActions<ST>(value)) {
+        return this.emitAllImpl(value).then((v) => this.continueNext(v, nextQueue));
+      }
+    });
   }
 
   private continueNext(result: ST, queue: SubjectLike<ST>): void {
