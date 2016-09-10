@@ -1,4 +1,4 @@
-import { Action, Processor } from './actions';
+import { Action } from './actions';
 import { State } from './store';
 
 export declare class Dispatcher<ST extends State> {
