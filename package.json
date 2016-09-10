@@ -9,6 +9,9 @@
   "bugs": {
     "url": "https://github.com/crescware/walts/issues"
   },
+  "dependencies": {
+    "lodash.clonedeep": "^4.5.0"
+  },
   "devDependencies": {
     "intelli-espower-loader": "^1.0.1",
     "mocha": "^3.0.2",
