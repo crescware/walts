@@ -1,6 +1,7 @@
-import { Subject, Observable } from 'rxjs';
+import { Subject } from 'rxjs';
+import { isPromise as rxIsPromise } from 'rxjs/util/isPromise';
 
-import { SyncAction } from './actions';
+import { SyncAction, AsyncAction } from './actions';
 import { State } from './store';
 
 interface SubjectLike<ST> {
@@ -23,8 +24,12 @@ function finish<ST>(resolve: (st: ST) => void, complete$: Subject<ST>): SubjectL
   };
 }
 
-function isActions<ST>(v: SyncAction<ST> | SyncAction<ST>[]): v is SyncAction<ST>[] {
+function isActions<ST>(v: SyncAction<ST> | AsyncAction<ST> | Array<SyncAction<ST> | AsyncAction<ST>>): v is Array<SyncAction<ST> | AsyncAction<ST>> {
   return Array.isArray(v);
+}
+
+function isAsyncAction<ST>(v: SyncAction<ST> | AsyncAction<ST>): v is AsyncAction<ST> {
+  return rxIsPromise(v);
 }
 
 export class Dispatcher<ST extends State> {
@@ -33,11 +38,11 @@ export class Dispatcher<ST extends State> {
   private continue$ = new Subject<ResultChunk<ST>>();
   private complete$ = new Subject<ST>();
 
-  emit(action: SyncAction<ST> | SyncAction<ST>[]): void {
+  emit(action: SyncAction<ST> | AsyncAction<ST> | Array<SyncAction<ST> | AsyncAction<ST>>): void {
     this.emitImpl(action, this.complete$);
   }
 
-  emitAll(actions: SyncAction<ST>[]): void {
+  emitAll(actions: Array<SyncAction<ST> | AsyncAction<ST>>): void {
     this.emitAllImpl(actions, this.complete$);
   }
 
@@ -59,14 +64,14 @@ export class Dispatcher<ST extends State> {
     });
   }
 
-  private emitImpl(action: SyncAction<ST> | SyncAction<ST>[], complete$: Subject<ST>): Promise<ST> {
+  private emitImpl(action: SyncAction<ST> | AsyncAction<ST> | Array<SyncAction<ST> | AsyncAction<ST>>, complete$: Subject<ST>): Promise<ST> {
     if (isActions<ST>(action)) {
       return this.emitAllImpl(action, complete$);
     }
-    return this.emitAllImpl([action as SyncAction<ST>], complete$);
+    return this.emitAllImpl([action as SyncAction<ST> | AsyncAction<ST>], complete$);
   }
 
-  private emitAllImpl(actions: SyncAction<ST>[], complete$: Subject<ST>): Promise<ST> {
+  private emitAllImpl(actions: Array<SyncAction<ST> | AsyncAction<ST>>, complete$: Subject<ST>): Promise<ST> {
     const promise = new Promise<ST>((resolve) => {
       const queues = actions.map((_) => new Subject<ST>());
 
@@ -77,7 +82,16 @@ export class Dispatcher<ST extends State> {
           : finish(resolve, complete$);
 
         queue.subscribe((state: ST) => {
-          this.continueNext(action(state), nextQueue);
+          if (isAsyncAction<ST>(action)) {
+            console.warn('Use of promise is deprecated. Please use the Actions#delayed() instead.');
+            action.then((_action) => {
+              const result = _action(state);
+              this.continueNext(result, nextQueue);
+            });
+            return;
+          }
+
+          this.continueNext((action as SyncAction<ST>)(state), nextQueue);
         });
       });
 
