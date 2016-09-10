@@ -17,15 +17,15 @@ export class Store<ST extends State> {
     this._observable = new BehaviorSubject<ST>(this.stateRef);
 
     this.dispatcher.subscribeBegin((queue) => {
-      queue.next(cloneDeep<ST>(this.stateRef));
+      queue.next(this.stateRef);
     });
     this.dispatcher.subscribeContinue((chunk) => {
-      this.stateRef = cloneDeep<ST>(Object.assign({}, this.stateRef, chunk.result));
+      this.stateRef = Object.assign({}, this.stateRef, chunk.result);
       chunk.queue.next(this.stateRef);
     });
     this.dispatcher.subscribeComplete((result) => {
-      this.stateRef = cloneDeep<ST>(Object.assign({}, this.stateRef, result));
-      this._observable.next(this.stateRef);
+      this.stateRef = Object.assign({}, this.stateRef, result);
+      this._observable.next(cloneDeep<ST>(this.stateRef));
     });
   }
 
