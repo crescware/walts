@@ -1,6 +1,6 @@
 import 'rxjs';
 import * as assert from 'power-assert';
-import { Actions, SyncAction, AsyncAction } from '../src/actions';
+import { Actions, SyncAction, DelayedAction, AsyncAction } from '../src/actions';
 import { Dispatcher } from '../src/dispatcher';
 import { Store } from '../src/store';
 
@@ -153,6 +153,63 @@ describe('Integration', () => {
       setTimeout(() => dispatcher.emitAll([actions.addToA(1), actions.addToB(2)]), 1);
       setTimeout(() => dispatcher.emitAll([actions.addToA(3), actions.addToB(4)]), 2);
       setTimeout(() => dispatcher.emitAll([actions.addToA(5), actions.addToB(6)]), 3);
+    });
+  });
+
+  describe('Delayed', () => {
+    interface TestState {
+      a: number;
+      b: number;
+    }
+
+    class TestActions extends Actions<TestState> {
+      delayedAddToA(n: number): DelayedAction<TestState> {
+        return (st: TestState) => {
+          return this.delayed((apply) => {
+            apply(this.addToA(n));
+          });
+        };
+      }
+      addToA(n: number): SyncAction<TestState> {
+        return (st) => {
+          return {
+            a: st.a + n
+          } as TestState;
+        };
+      }
+    }
+
+    const actions = new TestActions();
+
+    class TestDispatcher extends Dispatcher<TestState> {}
+
+    const initState: TestState = {
+      a: 1,
+      b: 1
+    };
+    class TestStore extends Store<TestState> {
+      constructor(dispatcher: TestDispatcher) {
+        super(initState, dispatcher);
+      }
+    }
+
+    it('correctly emit() to work', (done) => {
+      const dispatcher = new TestDispatcher();
+      const store      = new TestStore(dispatcher);
+
+      const value = 1;
+
+      let i = 0;
+      store.observable.subscribe((st) => {
+        if (i === 1) {
+          assert(st.a === initState.a + value);
+          assert(st.b === initState.b);
+          done();
+        }
+        i++;
+      });
+
+      dispatcher.emit(actions.delayedAddToA(value));
     });
   });
 

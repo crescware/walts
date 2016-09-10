@@ -36,7 +36,7 @@ function isAsyncAction<ST>(v: Action<ST>): v is AsyncAction<ST> {
   return rxIsPromise(v);
 }
 
-function isDelayedAction<ST>(v: SyncAction<ST> | DelayedAction<ST>): v is DelayedAction<ST> {
+function isDelayed<ST>(v: ST | Delayed<ST>): v is Delayed<ST> {
   return rxIsPromise(v);
 }
 
@@ -99,13 +99,14 @@ export class Dispatcher<ST extends State> {
             return;
           }
 
-          const syncOrDelayed = action as SyncAction<ST> | DelayedAction<ST>;
-          if (isDelayedAction<ST>(syncOrDelayed)) {
-            this.whenDelayed(syncOrDelayed(state as ST), nextQueue);
+          const syncOrDelayedAction = action as SyncAction<ST> | DelayedAction<ST>;
+          const stateOrDelayed      = syncOrDelayedAction(state);
+          if (isDelayed<ST>(stateOrDelayed)) {
+            this.whenDelayed(stateOrDelayed, nextQueue);
             return;
           }
 
-          this.continueNext((syncOrDelayed as SyncAction<ST>)(state), nextQueue);
+          this.continueNext(stateOrDelayed as ST, nextQueue);
         });
       });
 
