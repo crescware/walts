@@ -34,7 +34,8 @@
     "src/dispatcher.js",
     "src/dispatcher.d.ts",
     "src/store.js",
-    "src/store.d.ts"
+    "src/store.d.ts",
+    "src/utils.js"
   ],
   "homepage": "https://github.com/crescware/walts",
   "keywords": [
