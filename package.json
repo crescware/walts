@@ -56,7 +56,7 @@
   },
   "scripts": {
     "build": "tsconfig -u && tsc -p .",
-    "postinstall": "typings install",
+    "typings": "typings install",
     "test": "npm run build && mocha --require intelli-espower-loader --reporter dot ./test/test.js"
   },
   "typings": "index.d.ts"
