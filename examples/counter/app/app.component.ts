@@ -7,9 +7,10 @@ import { AppStore, AppState } from './app.store';
 @Component({
   selector: 'ex-app',
   template: `
-    <h1>A: {{state?.counterA}} B: {{state?.counterB}}</h1>
+    <h1>A: {{state?.a}} B: {{state?.b}} C: {{state?.c}}</h1>
     <button (click)="onClickIncrementA()">A +1</button>
     <button (click)="onClickIncrementB()">B +1</button>
+    <button (click)="onClickIncrementC()">C +1</button>
     <button (click)="onClickIncrementBSequence()">B (+1*2+3)</button>
     <button (click)="onClickIncrementBSimul()">B +1*2+3</button>
     <button (click)="onClickMultiplyA()">A x3</button>
@@ -42,6 +43,14 @@ export class AppComponent {
     this.dispatcher.emit(this.actions.incrementA(1));
   }
 
+  onClickIncrementB() {
+    this.dispatcher.emit(this.actions.incrementB(1));
+  }
+
+  onClickIncrementC() {
+    this.dispatcher.emit(this.actions.incrementC(1));
+  }
+
   onClickMultiplyA() {
     this.dispatcher.emit(this.actions.multiplyA(3));
   }
@@ -58,10 +67,6 @@ export class AppComponent {
       this.actions.multiplyA(2),
       this.actions.incrementA(1)
     ]);
-  }
-
-  onClickIncrementB() {
-    this.dispatcher.emit(this.actions.incrementB(1));
   }
 
   onClickIncrementBSequence() {

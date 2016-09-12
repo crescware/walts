@@ -11,36 +11,50 @@ export class AppActions extends Actions<AppState> {
   }
 
   incrementA(v: number): Action<AppState> {
-    return (state: AppState) => ({
-      counterA: state.counterA + v
-    });
+    return (st) => ({
+      a: st.a + v
+    } as AppState);
   }
 
   incrementB(v: number): Action<AppState> {
     return new Promise((resolve) => {
       setTimeout(() => {
-        resolve((state: AppState) => {
+        resolve((st: AppState) => {
           return {
-            counterB: state.counterB + v
-          };
+            b: st.b + v
+          } as AppState;
         });
       }, 1000);
     });
   }
 
+  incrementC(v: number): Action<AppState> {
+    return (st) => {
+      return this.delayed((apply) => {
+        setTimeout(() => {
+          apply((st) => {
+            return {
+              c: st.c + v
+            } as AppState;
+          });
+        }, 1000);
+      });
+    };
+  }
+
   multiplyA(v: number): Action<AppState> {
-    return (state: AppState) => ({
-      counterA: state.counterA * v
-    });
+    return (st) => ({
+      a: st.a * v
+    } as AppState);
   }
 
   multiplyB(v: number): AsyncAction<AppState> {
     return new Promise((resolve) => {
       setTimeout(() => {
-        resolve((state: AppState) => {
+        resolve((st: AppState) => {
           return {
-            counterB: state.counterB * v
-          };
+            b: st.b * v
+          } as AppState;
         });
       }, 1000);
     });
@@ -56,18 +70,19 @@ export class AppActions extends Actions<AppState> {
 
   plus1Times2B(): Action<AppState>[] {
     return this.combine([
-      (state: AppState) => ({
-        counterB: state.counterB + 1
-      }),
+      (st) => ({
+        b: st.b + 1
+      } as AppState),
       this.multiplyB(2)
     ]);
   }
 
   reset(): Action<AppState> {
-    return (state: AppState) => ({
-      counterA: 0,
-      counterB: 0
-    });
+    return (st) => ({
+      a: 0,
+      b: 0,
+      c: 0
+    } as AppState);
   }
 
   syncThrow(): Action<AppState> {
@@ -76,9 +91,9 @@ export class AppActions extends Actions<AppState> {
 
   times2Plus1B(): Action<AppState>[] {
     return this.combine([
-      (state: AppState) => ({
-        counterB: state.counterB * 2
-      }),
+      (st) => ({
+        b: st.b * 2
+      } as AppState),
       this.incrementB(1)
     ]);
   }

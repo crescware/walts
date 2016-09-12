@@ -4,13 +4,15 @@ import { State, Store } from 'walts';
 import { AppDispatcher } from './app.dispatcher';
 
 export class AppState extends State {
-  counterA?: number;
-  counterB?: number;
+  a: number;
+  b: number;
+  c: number;
 }
 
 const INIT_STATE: AppState = {
-  counterA: 0,
-  counterB: 0
+  a: 0,
+  b: 0,
+  c: 0
 };
 
 @Injectable()
