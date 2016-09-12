@@ -62,9 +62,9 @@ export class AppActions extends Actions<AppState> {
 
   nestedCombineAction(): Action<AppState>[] {
     return this.combine([
-      this.times2Plus1B(),
-      this.times2Plus1B(),
-      this.times2Plus1B()
+      this.incrementA(1),
+      this.incrementB(1),
+      this.incrementC(1)
     ]);
   }
 
