@@ -313,6 +313,18 @@ describe('Integration', () => {
           } as TestState;
         };
       }
+      causeError(): AsyncAction<TestState> {
+        return new Promise((resolve) => {
+          resolve((st: TestState) => {
+            throw Error('Dummy error');
+          });
+        });
+      }
+      causeErrorWithReject(): AsyncAction<TestState> {
+        return new Promise((resolve, reject) => {
+          reject('reject');
+        });
+      }
     }
 
     const actions = new TestActions();
@@ -390,6 +402,30 @@ describe('Integration', () => {
         actions.addToAAfter2Sec(value),
         actions.addToA(value)
       ]);
+    });
+
+    it('can catch an error', (done) => {
+      const dispatcher = new TestDispatcher();
+      const store      = new TestStore(dispatcher);
+
+      store.observable.subscribe(() => {}, (err) => {
+        assert(err.message === 'Dummy error');
+        done();
+      });
+
+      dispatcher.emit(actions.causeError());
+    });
+
+    it('can catch an error when rejected inner a promise callback', (done) => {
+      const dispatcher = new TestDispatcher();
+      const store      = new TestStore(dispatcher);
+
+      store.observable.subscribe(() => {}, (err) => {
+        assert(err === 'reject');
+        done();
+      });
+
+      dispatcher.emit(actions.causeErrorWithReject());
     });
 
   });

@@ -97,6 +97,8 @@ export class Dispatcher<ST extends State> {
             action.then((_action) => {
               const result = _action(state);
               this.continueNext(result, nextQueue);
+            }).catch((err) => {
+              this.complete$.error(err);
             });
             return;
           }
