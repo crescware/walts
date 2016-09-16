@@ -26,6 +26,8 @@ export class Store<ST extends State> {
     this.dispatcher.subscribeComplete((result) => {
       this.stateRef = Object.assign({}, this.stateRef, result);
       this._observable.next(cloneDeep<ST>(this.stateRef));
+    }, (err) => {
+      this._observable.error(err);
     });
   }
 

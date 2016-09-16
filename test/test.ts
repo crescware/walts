@@ -27,6 +27,12 @@ describe('Integration', () => {
           } as TestState;
         };
       }
+
+      causeError(): SyncAction<TestState> {
+        return (st) => {
+          throw Error('Dummy error');
+        };
+      }
     }
 
     const actions = new TestActions();
@@ -153,6 +159,18 @@ describe('Integration', () => {
       setTimeout(() => dispatcher.emitAll([actions.addToA(1), actions.addToB(2)]), 1);
       setTimeout(() => dispatcher.emitAll([actions.addToA(3), actions.addToB(4)]), 2);
       setTimeout(() => dispatcher.emitAll([actions.addToA(5), actions.addToB(6)]), 3);
+    });
+
+    it('can catch an error', (done) => {
+      const dispatcher = new TestDispatcher();
+      const store      = new TestStore(dispatcher);
+
+      store.observable.subscribe(() => {}, (err) => {
+        assert(err.message === 'Dummy error');
+        done();
+      });
+
+      dispatcher.emit(actions.causeError());
     });
   });
 

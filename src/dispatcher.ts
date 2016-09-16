@@ -66,9 +66,11 @@ export class Dispatcher<ST extends State> {
     });
   }
 
-  subscribeComplete(observer: (result: ST) => void): void {
+  subscribeComplete(observer: (result: ST) => void, errorHandler: (error: any) => void): void {
     this.complete$.subscribe((result) => {
       observer(result);
+    }, (err) => {
+      errorHandler(err);
     });
   }
 
@@ -100,7 +102,12 @@ export class Dispatcher<ST extends State> {
           }
 
           const syncOrDelayedAction = action as SyncAction<ST> | DelayedAction<ST>;
-          const stateOrDelayed      = syncOrDelayedAction(state);
+          let stateOrDelayed: ST | Delayed<ST>;
+          try {
+            stateOrDelayed = syncOrDelayedAction(state);
+          } catch(e) {
+            this.complete$.error(e);
+          }
           if (isDelayed<ST>(stateOrDelayed)) {
             this.whenDelayed(stateOrDelayed, nextQueue);
             return;
