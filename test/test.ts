@@ -30,7 +30,7 @@ describe('Integration', () => {
 
       causeError(): SyncAction<TestState> {
         return (st) => {
-          throw Error('Dummy error');
+          throw new Error('Dummy error');
         };
       }
     }
@@ -198,7 +198,7 @@ describe('Integration', () => {
       causeError(): DelayedAction<TestState> {
         return (st) => {
           return this.delayed((apply) => {
-            throw Error('Dummy error');
+            throw new Error('Dummy error');
           });
         };
       }
@@ -206,7 +206,7 @@ describe('Integration', () => {
         return (st) => {
           return this.delayed((apply) => {
             apply((st) => {
-              throw Error('Dummy error inner apply');
+              throw new Error('Dummy error inner apply');
             })
           });
         };
@@ -316,7 +316,7 @@ describe('Integration', () => {
       causeError(): AsyncAction<TestState> {
         return new Promise((resolve) => {
           resolve((st: TestState) => {
-            throw Error('Dummy error');
+            throw new Error('Dummy error');
           });
         });
       }
