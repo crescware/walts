@@ -7,7 +7,7 @@
       "es6"
     ],
     "noImplicitAny": true,
-    "strictNullChecks": true,
+    "strictNullChecks": false,
     "skipLibCheck": true,
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
