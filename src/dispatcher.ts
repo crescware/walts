@@ -109,7 +109,9 @@ export class Dispatcher<ST extends State> {
             this.complete$.error(e);
           }
           if (isDelayed<ST>(stateOrDelayed)) {
-            this.whenDelayed(stateOrDelayed, nextQueue);
+            this.whenDelayed(stateOrDelayed, nextQueue, (err) => {
+              this.complete$.error(err);
+            });
             return;
           }
 
@@ -122,7 +124,7 @@ export class Dispatcher<ST extends State> {
     return promise;
   }
 
-  private whenDelayed(result: Delayed<ST>, nextQueue: SubjectLike<ST>) {
+  private whenDelayed(result: Delayed<ST>, nextQueue: SubjectLike<ST>, errorHandler: (error: any) => void) {
     result.then((value) => {
       if (isAction<ST>(value)) {
         return this.emitImpl(value).then((v) => this.continueNext(v, nextQueue));
@@ -130,6 +132,8 @@ export class Dispatcher<ST extends State> {
       if (isActions<ST>(value)) {
         return this.emitAllImpl(value).then((v) => this.continueNext(v, nextQueue));
       }
+    }).catch((err) => {
+      errorHandler(err);
     });
   }
 

@@ -195,6 +195,29 @@ describe('Integration', () => {
           } as TestState;
         };
       }
+      causeError(): DelayedAction<TestState> {
+        return (st) => {
+          return this.delayed((apply) => {
+            throw Error('Dummy error');
+          });
+        };
+      }
+      causeErrorAfterApply(): DelayedAction<TestState> {
+        return (st) => {
+          return this.delayed((apply) => {
+            apply((st) => {
+              throw Error('Dummy error inner apply');
+            })
+          });
+        };
+      }
+      causeErrorNested(): DelayedAction<TestState> {
+        return (st) => {
+          return this.delayed((apply) => {
+            apply(this.causeError());
+          });
+        };
+      }
     }
 
     const actions = new TestActions();
@@ -228,6 +251,42 @@ describe('Integration', () => {
       });
 
       dispatcher.emit(actions.delayedAddToA(value));
+    });
+
+    it('can catch an error', (done) => {
+      const dispatcher = new TestDispatcher();
+      const store      = new TestStore(dispatcher);
+
+      store.observable.subscribe(() => {}, (err) => {
+        assert(err.message === 'Dummy error');
+        done();
+      });
+
+      dispatcher.emit(actions.causeError());
+    });
+
+    it('can catch an error when caused from inner apply()', (done) => {
+      const dispatcher = new TestDispatcher();
+      const store      = new TestStore(dispatcher);
+
+      store.observable.subscribe(() => {}, (err) => {
+        assert(err.message === 'Dummy error inner apply');
+        done();
+      });
+
+      dispatcher.emit(actions.causeErrorAfterApply());
+    });
+
+    it('can catch an error when caused in nested actions', (done) => {
+      const dispatcher = new TestDispatcher();
+      const store      = new TestStore(dispatcher);
+
+      store.observable.subscribe(() => {}, (err) => {
+        assert(err.message === 'Dummy error');
+        done();
+      });
+
+      dispatcher.emit(actions.causeErrorNested());
     });
   });
 
