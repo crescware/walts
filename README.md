@@ -1,5 +1,5 @@
 # Walts
-One-way pub/sub architecture for Angular 2
+Walts is a library for Angular (>= 2.0.0) to provide the Observer pattern using RxJS.
 
 ## Installation
 
