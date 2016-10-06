@@ -430,3 +430,95 @@ describe('Integration', () => {
 
   });
 });
+
+describe('Nested state', () => {
+  interface TestState {
+    a: {
+      a1: number;
+      a2: {
+        a21: number;
+        a22: number;
+      }
+    };
+    b: number;
+  }
+
+  class TestActions extends Actions<TestState> {
+    addToA21NotConsider(n: number): SyncAction<TestState> {
+      return (st) => {
+        return {
+          a: {
+            a2: {
+              a21: st.a.a2.a21 + n
+            }
+          }
+        } as TestState;
+      };
+    }
+
+    addToA21(n: number): SyncAction<TestState> {
+      return (st) => {
+        st.a.a2.a21 = st.a.a2.a21 + n;
+        return st;
+      };
+    }
+  }
+
+  const actions = new TestActions();
+
+  class TestDispatcher extends Dispatcher<TestState> {}
+
+  const initState: TestState = {
+    a: {
+      a1: 1,
+      a2: {
+        a21: 1,
+        a22: 1
+      }
+    },
+    b: 1
+  };
+  class TestStore extends Store<TestState> {
+    constructor(dispatcher: TestDispatcher) {
+      super(initState, dispatcher);
+    }
+  }
+
+  it('all values are cleared when that does not consider the rewriting of nested objects', (done) => {
+    const dispatcher = new TestDispatcher();
+    const store      = new TestStore(dispatcher);
+
+    const value = 1;
+
+    let i = 0;
+    store.observable.subscribe((st) => {
+      if (i === 1) {
+        assert(st.a.a2.a21 === initState.a.a2.a21 + value);
+        assert(st.a.a2.a22 === void 0);
+        assert(st.b === initState.b);
+        done();
+      }
+      i++;
+    });
+
+    dispatcher.emit(actions.addToA21NotConsider(value));
+  });
+
+  it('is performed property rewriting of nested objects correctly, the value is maintained', (done) => {
+    const dispatcher = new TestDispatcher();
+    const store      = new TestStore(dispatcher);
+
+    const value = 1;
+
+    let i = 0;
+    store.observable.subscribe((st) => {
+      if (i === 1) {
+        assert.deepEqual(st, initState);
+        done();
+      }
+      i++;
+    });
+
+    dispatcher.emit(actions.addToA21(value));
+  });
+});
