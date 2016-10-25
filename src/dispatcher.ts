@@ -3,6 +3,7 @@ import { isPromise as rxIsPromise } from 'rxjs/util/isPromise';
 
 import { Action, SyncAction, DelayedAction, AsyncAction, Delayed } from './actions';
 import { State } from './store';
+import { flatten } from './utils';
 
 interface SubjectLike<ST> {
   next: (st: ST) => void;
@@ -50,7 +51,7 @@ export class Dispatcher<ST extends State> {
     this.emitImpl(action, this.complete$);
   }
 
-  emitAll(actions: Action<ST>[]): void {
+  emitAll(actions: (Action<ST> | Action<ST>[])[]): void {
     this.emitAllImpl(actions, this.complete$);
   }
 
@@ -81,7 +82,9 @@ export class Dispatcher<ST extends State> {
     return this.emitAllImpl([action as Action<ST>], complete$);
   }
 
-  private emitAllImpl(actions: Action<ST>[], complete$?: Subject<ST>): Promise<ST> {
+  private emitAllImpl(_actions: (Action<ST> | Action<ST>[])[], complete$?: Subject<ST>): Promise<ST> {
+    const actions = flatten(_actions) as Action<ST>[];
+
     const promise = new Promise<ST>((resolve) => {
       const queues = actions.map((_) => new Subject<ST>());
 

@@ -1,6 +1,6 @@
 import 'rxjs';
 import * as assert from 'power-assert';
-import { Actions, SyncAction, DelayedAction, AsyncAction } from '../src/actions';
+import { Actions, Action, DelayedAction, AsyncAction } from '../src/actions';
 import { Dispatcher } from '../src/dispatcher';
 import { Store } from '../src/store';
 
@@ -12,7 +12,7 @@ describe('Integration', () => {
     }
 
     class TestActions extends Actions<TestState> {
-      addToA(n: number): SyncAction<TestState> {
+      addToA(n: number): Action<TestState> {
         return (st) => {
           return {
             a: st.a + n
@@ -20,7 +20,7 @@ describe('Integration', () => {
         };
       }
 
-      addToB(n: number): SyncAction<TestState> {
+      addToB(n: number): Action<TestState> {
         return (st) => {
           return {
             b: st.b + n
@@ -28,7 +28,7 @@ describe('Integration', () => {
         };
       }
 
-      causeError(): SyncAction<TestState> {
+      causeError(): Action<TestState> {
         return (st) => {
           throw new Error('Dummy error');
         };
@@ -188,7 +188,7 @@ describe('Integration', () => {
           });
         };
       }
-      addToA(n: number): SyncAction<TestState> {
+      addToA(n: number): Action<TestState> {
         return (st) => {
           return {
             a: st.a + n
@@ -306,7 +306,7 @@ describe('Integration', () => {
           });
         });
       }
-      addToA(n: number): SyncAction<TestState> {
+      addToA(n: number): Action<TestState> {
         return (st) => {
           return {
             a: st.a + n
@@ -360,7 +360,7 @@ describe('Integration', () => {
       dispatcher.emit(actions.addToAAfter2Sec(value));
     });
 
-    it('correctly SyncAction -> AsyncAction to work', (done) => {
+    it('correctly Action -> AsyncAction to work', (done) => {
       const dispatcher = new TestDispatcher();
       const store      = new TestStore(dispatcher);
 
@@ -382,7 +382,7 @@ describe('Integration', () => {
       ]);
     });
 
-    it('correctly AsyncAction -> SyncAction to work', (done) => {
+    it('correctly AsyncAction -> Action to work', (done) => {
       const dispatcher = new TestDispatcher();
       const store      = new TestStore(dispatcher);
 
@@ -431,6 +431,114 @@ describe('Integration', () => {
   });
 });
 
+describe('Nested emitAll', () => {
+  interface TestState {
+    a: number;
+    b: number;
+  }
+
+  class TestActions extends Actions<TestState> {
+    addToA(n: number): Action<TestState> {
+      return (st) => {
+        return {
+          a: st.a + n
+        } as TestState;
+      };
+    }
+
+    addToB(n: number): Action<TestState> {
+      return (st) => {
+        return {
+          b: st.b + n
+        } as TestState;
+      };
+    }
+
+    useCombine(n: number): Action<TestState>[] {
+      return this.combine([
+        (st) => {
+          return {
+            a: st.a + n
+          } as TestState;
+        },
+        (st) => {
+          return {
+            b: st.b + n
+          } as TestState;
+        },
+        this.addToA(n * 2),
+        this.addToB(n * 2)
+      ])
+    }
+
+    useCombineNested(n: number): Action<TestState>[] {
+      return this.combine([
+        (st) => {
+          return {
+            a: st.a + n
+          } as TestState;
+        },
+        this.addToA(1),
+        this.useCombine(1)
+      ])
+    }
+  }
+
+  const actions = new TestActions();
+
+  class TestDispatcher extends Dispatcher<TestState> {}
+
+  const initState: TestState = {
+    a: 1,
+    b: 1
+  };
+  class TestStore extends Store<TestState> {
+    constructor(dispatcher: TestDispatcher) {
+      super(initState, dispatcher);
+    }
+  }
+
+  it('correctly emitAll() to work with combine', (done) => {
+    const dispatcher = new TestDispatcher();
+    const store      = new TestStore(dispatcher);
+
+    let i = 0;
+    store.observable.subscribe((st) => {
+      if (i === 1) {
+        assert(st.a === 8);
+        assert(st.b === 7);
+        done();
+      }
+      i++;
+    });
+
+    dispatcher.emitAll([
+      actions.addToA(1),
+      actions.useCombine(2)
+    ]);
+  });
+
+  it('correctly emitAll() to work with nested combine', (done) => {
+    const dispatcher = new TestDispatcher();
+    const store      = new TestStore(dispatcher);
+
+    let i = 0;
+    store.observable.subscribe((st) => {
+      if (i === 1) {
+        assert(st.a === 10);
+        assert(st.b === 7);
+        done();
+      }
+      i++;
+    });
+
+    dispatcher.emitAll([
+      actions.useCombine(1),
+      actions.useCombineNested(2),
+    ]);
+  });
+});
+
 describe('Nested state', () => {
   interface TestState {
     a: {
@@ -444,7 +552,7 @@ describe('Nested state', () => {
   }
 
   class TestActions extends Actions<TestState> {
-    addToA21NotConsider(n: number): SyncAction<TestState> {
+    addToA21NotConsider(n: number): Action<TestState> {
       return (st) => {
         return {
           a: {
@@ -456,7 +564,7 @@ describe('Nested state', () => {
       };
     }
 
-    addToA21(n: number): SyncAction<TestState> {
+    addToA21(n: number): Action<TestState> {
       return (st) => {
         st.a.a2.a21 = st.a.a2.a21 + n;
         return st;

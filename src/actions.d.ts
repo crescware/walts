@@ -11,14 +11,12 @@ export type Action       <ST extends State> = SyncAction<ST> | DelayedAction<ST>
  */
 export type AsyncAction<ST extends State> = Promise<(state: ST) => ST>;
 
-export interface RecursiveArray<T> extends Array<T | RecursiveArray<T>> {}
-
 type Executor<ST extends State> = (
   apply: (actionOrActions: Action<ST> | Action<ST>[] | PromiseLike<Action<ST> | Action<ST>[]>) => void,
   reject: (reason?: any) => void
 ) => void;
 
 export declare class Actions<ST extends State> {
-  protected combine(...nexts: Array<Action<ST> | RecursiveArray<Action<ST>>>): Action<ST>[];
+  protected combine(actions: (Action<ST> | Action<ST>[])[]): Action<ST>[];
   protected delayed(executor: Executor<ST>): Delayed<ST>;
 }
