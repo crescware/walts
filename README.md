@@ -24,7 +24,7 @@ npm install walts
 
 - [examples/flux-chat](https://github.com/crescware/walts/tree/master/examples/flux-chat)
 - [TodoMVC](https://github.com/armorik83/comparing-ng2-redux-and-walts/tree/master/examples/walts)
-- [Shoping cart](https://github.com/armorik83/walts-flux-comparison)
+- [Shopping cart](https://github.com/armorik83/walts-flux-comparison)
 
 ## License
 
