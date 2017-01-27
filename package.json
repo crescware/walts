@@ -1,6 +1,6 @@
 {
   "name": "walts",
-  "description": "One-way pub/sub architecture for Angular 2",
+  "description": "One-way pub/sub architecture for Angular ver.2.0.0+",
   "version": "0.11.0-beta.2",
   "author": {
     "name": "Crescware",
@@ -36,6 +36,7 @@
   ],
   "homepage": "https://github.com/crescware/walts",
   "keywords": [
+    "angular",
     "angular2",
     "angularjs",
     "flux",
