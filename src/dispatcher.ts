@@ -43,46 +43,41 @@ export class Dispatcher<ST extends State> {
   private continue$ = new Subject<ResultChunk<ST>>()
   private complete$ = new Subject<ST>()
 
-  emit(action: Action<ST> | Action<ST>[]): void {
-    this.emitImpl(action, this.complete$)
+  emit(action: Action<ST> | Action<ST>[]) {
+    this._emit(action, this.complete$)
   }
 
-  emitAll(actions: (Action<ST> | Action<ST>[])[]): void {
-    this.emitAllImpl(actions, this.complete$)
+  emitAll(actions: (Action<ST> | Action<ST>[])[]) {
+    this._emitAll(actions, this.complete$)
   }
 
-  subscribeBegin(observer: (queue: Subject<ST>) => void): void {
-    this.begin$.subscribe((queue) => {
-      observer(queue)
-    })
+  subscribeBegin(observer: (queue: Subject<ST>) => void) {
+    this.begin$.subscribe(queue => observer(queue))
   }
 
-  subscribeContinue(observer: (chunk: ResultChunk<ST>) => void): void {
-    this.continue$.subscribe((chunk) => {
-      observer(chunk)
-    })
+  subscribeContinue(observer: (chunk: ResultChunk<ST>) => void) {
+    this.continue$.subscribe(chunk => observer(chunk))
   }
 
-  subscribeComplete(observer: (result: ST) => void, errorHandler: (error: any) => void): void {
-    this.complete$.subscribe((result) => {
-      observer(result)
-    }, (err) => {
-      errorHandler(err)
-    })
+  subscribeComplete(observer: (result: ST) => void, errorHandler: (error: any) => void) {
+    this.complete$.subscribe(
+      result => observer(result),
+      err    => errorHandler(err)
+    )
   }
 
-  private emitImpl(action: Action<ST> | Action<ST>[], complete$?: Subject<ST>): Promise<ST> {
+  private _emit(action: Action<ST> | Action<ST>[], complete$?: Subject<ST>): Promise<ST> {
     if (isActions<ST>(action)) {
-      return this.emitAllImpl(action, complete$)
+      return this._emitAll(action, complete$)
     }
-    return this.emitAllImpl([action as Action<ST>], complete$)
+    return this._emitAll([action as Action<ST>], complete$)
   }
 
-  private emitAllImpl(_actions: (Action<ST> | Action<ST>[])[], complete$?: Subject<ST>): Promise<ST> {
+  private _emitAll(_actions: (Action<ST> | Action<ST>[])[], complete$?: Subject<ST>): Promise<ST> {
     const actions = flatten(_actions) as Action<ST>[]
 
-    const promise = new Promise<ST>((resolve) => {
-      const queues = actions.map((_) => new Subject<ST>())
+    const promise = new Promise<ST>(resolve => {
+      const queues = actions.map(_ => new Subject<ST>())
 
       queues.forEach((queue, i) => {
         const action    = actions[i]
@@ -99,9 +94,11 @@ export class Dispatcher<ST extends State> {
             this.complete$.error(e)
           }
           if (isDelayed<ST>(stateOrDelayed)) {
-            this.whenDelayed(stateOrDelayed, nextQueue, (err) => {
-              this.complete$.error(err)
-            })
+            this.whenDelayed(
+              stateOrDelayed,
+              nextQueue,
+              err => this.complete$.error(err)
+            )
             return
           }
 
@@ -115,19 +112,21 @@ export class Dispatcher<ST extends State> {
   }
 
   private whenDelayed(result: Delayed<ST>, nextQueue: SubjectLike<ST>, errorHandler: (error: any) => void) {
-    result.then((value) => {
-      if (isAction<ST>(value)) {
-        return this.emitImpl(value).then((v) => this.continueNext(v, nextQueue))
-      }
-      if (isActions<ST>(value)) {
-        return this.emitAllImpl(value).then((v) => this.continueNext(v, nextQueue))
-      }
-    }).catch((err) => {
-      errorHandler(err)
-    })
+    result
+      .then(value => {
+        if (isAction<ST>(value)) {
+          return this._emit(value)
+            .then(v => this.continueNext(v, nextQueue))
+        }
+        if (isActions<ST>(value)) {
+          return this._emitAll(value)
+            .then(v => this.continueNext(v, nextQueue))
+        }
+      })
+      .catch(err => errorHandler(err))
   }
 
-  private continueNext(result: ST, queue: SubjectLike<ST>): void {
+  private continueNext(result: ST, queue: SubjectLike<ST>) {
     this.continue$.next({result, queue})
   }
 
