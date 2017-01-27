@@ -35,6 +35,10 @@ ansi-align@^1.1.0:
   dependencies:
     string-width "^1.0.1"
 
+ansi-escapes@^1.0.0:
+  version "1.4.0"
+  resolved "https://registry.yarnpkg.com/ansi-escapes/-/ansi-escapes-1.4.0.tgz#d3a8a83b319aa67793662b13e761c7911422306e"
+
 ansi-regex@^2.0.0:
   version "2.0.0"
   resolved "https://registry.yarnpkg.com/ansi-regex/-/ansi-regex-2.0.0.tgz#c5061b6e0ef8a81775e50f5d66151bf6bf371107"
@@ -58,10 +62,6 @@ array-filter@^1.0.0:
 array-uniq@^1.0.2:
   version "1.0.3"
   resolved "https://registry.yarnpkg.com/array-uniq/-/array-uniq-1.0.3.tgz#af6ac877a25cc7f74e058894753858dfdb24fdb6"
-
-arrify@^1.0.0:
-  version "1.0.1"
-  resolved "https://registry.yarnpkg.com/arrify/-/arrify-1.0.1.tgz#898508da2226f380df904728456849c1501a4b0d"
 
 asynckit@^0.4.0:
   version "0.4.0"
@@ -134,6 +134,19 @@ chalk@^1.0.0, chalk@^1.1.1:
 cli-boxes@^1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/cli-boxes/-/cli-boxes-1.0.0.tgz#4fa917c3e59c94a004cd61f8ee509da651687143"
+
+cli-cursor@^1.0.2:
+  version "1.0.2"
+  resolved "https://registry.yarnpkg.com/cli-cursor/-/cli-cursor-1.0.2.tgz#64da3f7d56a54412e59794bd62dc35295e8f2987"
+  dependencies:
+    restore-cursor "^1.0.1"
+
+cli-truncate@^0.2.1:
+  version "0.2.1"
+  resolved "https://registry.yarnpkg.com/cli-truncate/-/cli-truncate-0.2.1.tgz#9f15cfbb0705005369216c626ac7d05ab90dd574"
+  dependencies:
+    slice-ansi "0.0.4"
+    string-width "^1.0.1"
 
 clone@^1.0.2:
   version "1.0.2"
@@ -243,11 +256,9 @@ delayed-stream@~1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/delayed-stream/-/delayed-stream-1.0.0.tgz#df3ae199acadfb7d440aaae0b29e2272b24ec619"
 
-detect-indent@^4.0.0:
-  version "4.0.0"
-  resolved "https://registry.yarnpkg.com/detect-indent/-/detect-indent-4.0.0.tgz#f76d064352cdf43a1cb6ce619c4ee3a9475de208"
-  dependencies:
-    repeating "^2.0.0"
+detect-indent@^5.0.0:
+  version "5.0.0"
+  resolved "https://registry.yarnpkg.com/detect-indent/-/detect-indent-5.0.0.tgz#3871cc0a6a002e8c3e5b3cf7f336264675f06b9d"
 
 diff-match-patch@^1.0.0:
   version "1.0.0"
@@ -272,6 +283,10 @@ duplexer2@^0.1.4:
 eastasianwidth@^0.1.1:
   version "0.1.1"
   resolved "https://registry.yarnpkg.com/eastasianwidth/-/eastasianwidth-0.1.1.tgz#44d656de9da415694467335365fb3147b8572b7c"
+
+elegant-spinner@^1.0.1:
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/elegant-spinner/-/elegant-spinner-1.0.1.tgz#db043521c95d7e303fd8f345bedc3349cfb0729e"
 
 empower-core@^0.6.1:
   version "0.6.1"
@@ -376,6 +391,10 @@ esutils@^2.0.2:
   version "2.0.2"
   resolved "https://registry.yarnpkg.com/esutils/-/esutils-2.0.2.tgz#0abf4f1caa5bcb1f7a9d8acc6dea4faaa04bac9b"
 
+exit-hook@^1.0.0:
+  version "1.1.1"
+  resolved "https://registry.yarnpkg.com/exit-hook/-/exit-hook-1.1.1.tgz#f05ca233b48c05d54fff07765df8507e95c02ff8"
+
 extend@3, extend@~3.0.0:
   version "3.0.0"
   resolved "https://registry.yarnpkg.com/extend/-/extend-3.0.0.tgz#5a474353b9f3353ddd8176dfd37b91c83a46f1d4"
@@ -440,7 +459,7 @@ got@^5.0.0:
     unzip-response "^1.0.0"
     url-parse-lax "^1.0.0"
 
-graceful-fs@^4.1.2:
+graceful-fs@^4.1.2, graceful-fs@^4.1.4:
   version "4.1.9"
   resolved "https://registry.yarnpkg.com/graceful-fs/-/graceful-fs-4.1.9.tgz#baacba37d19d11f9d146d3578bc99958c3787e29"
 
@@ -586,10 +605,6 @@ is-url@^1.2.1:
   version "1.2.2"
   resolved "https://registry.yarnpkg.com/is-url/-/is-url-1.2.2.tgz#498905a593bf47cc2d9e7f738372bbf7696c7f26"
 
-is-utf8@^0.2.0:
-  version "0.2.1"
-  resolved "https://registry.yarnpkg.com/is-utf8/-/is-utf8-0.2.1.tgz#4b0da1442104d1b336340e80797e865cf39f7d72"
-
 is-windows@^0.2.0:
   version "0.2.0"
   resolved "https://registry.yarnpkg.com/is-windows/-/is-windows-0.2.0.tgz#de1aa6d63ea29dd248737b69f1ff8b8002d2108c"
@@ -615,6 +630,20 @@ js-tokens@^1.0.1:
 json3@3.3.2:
   version "3.3.2"
   resolved "https://registry.yarnpkg.com/json3/-/json3-3.3.2.tgz#3c0434743df93e2f5c42aee7b19bcb483575f4e1"
+
+jspm-config@^0.3.0:
+  version "0.3.4"
+  resolved "https://registry.yarnpkg.com/jspm-config/-/jspm-config-0.3.4.tgz#44c26902e4ae8ece2366cedc9ff16b10a5f391c6"
+  dependencies:
+    any-promise "^1.3.0"
+    graceful-fs "^4.1.4"
+    make-error-cause "^1.2.1"
+    object.pick "^1.1.2"
+    parse-json "^2.2.0"
+    strip-bom "^3.0.0"
+    thenify "^3.2.0"
+    throat "^3.0.0"
+    xtend "^4.0.1"
 
 latest-version@^2.0.0:
   version "2.0.0"
@@ -687,6 +716,13 @@ lodash.keys@^3.0.0:
     lodash._getnative "^3.0.0"
     lodash.isarguments "^3.0.0"
     lodash.isarray "^3.0.0"
+
+log-update@^1.0.2:
+  version "1.0.2"
+  resolved "https://registry.yarnpkg.com/log-update/-/log-update-1.0.2.tgz#19929f64c4093d2d2e7075a1dad8af59c296b8d1"
+  dependencies:
+    ansi-escapes "^1.0.0"
+    cli-cursor "^1.0.2"
 
 loose-envify@^1.0.0:
   version "1.2.0"
@@ -786,7 +822,7 @@ object-keys@^1.0.0, object-keys@^1.0.8:
   version "1.0.11"
   resolved "https://registry.yarnpkg.com/object-keys/-/object-keys-1.0.11.tgz#c54601778ad560f1142ce0e01bcca8b56d13426d"
 
-object.pick@^1.1.1:
+object.pick@^1.1.1, object.pick@^1.1.2:
   version "1.1.2"
   resolved "https://registry.yarnpkg.com/object.pick/-/object.pick-1.1.2.tgz#c24da6ce45f10c5aabe71797d16a839cd5969b1e"
   dependencies:
@@ -797,6 +833,10 @@ once@^1.3.0:
   resolved "https://registry.yarnpkg.com/once/-/once-1.4.0.tgz#583b1aa775961d4b113ac17d9c50baef9dd76bd1"
   dependencies:
     wrappy "1"
+
+onetime@^1.0.0:
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/onetime/-/onetime-1.1.0.tgz#a1f7838f8314c516f05ecefcbc4ccfe04b4ed789"
 
 optionator@^0.8.1:
   version "0.8.2"
@@ -875,18 +915,14 @@ popsicle-status@^2.0.0:
   version "2.0.0"
   resolved "https://registry.yarnpkg.com/popsicle-status/-/popsicle-status-2.0.0.tgz#54e12722376efba0a353abdf53cbf1ce0e852efa"
 
-popsicle@^8.0.2:
-  version "8.2.0"
-  resolved "https://registry.yarnpkg.com/popsicle/-/popsicle-8.2.0.tgz#ff4401005cab43a9418a91410611c00197712d21"
+popsicle@^9.0.0:
+  version "9.0.0"
+  resolved "https://registry.yarnpkg.com/popsicle/-/popsicle-9.0.0.tgz#c0cae31ce903076eafad703a4dcd760c31120e6d"
   dependencies:
-    any-promise "^1.3.0"
-    arrify "^1.0.0"
     concat-stream "^1.4.7"
     form-data "^2.0.0"
     make-error-cause "^1.2.1"
-    throwback "^1.1.0"
     tough-cookie "^2.0.0"
-    xtend "^4.0.0"
 
 power-assert-context-formatter@^1.0.7:
   version "1.1.0"
@@ -994,6 +1030,10 @@ promise-finally@^2.0.1:
   dependencies:
     any-promise "^1.3.0"
 
+promise-finally@^3.0.0:
+  version "3.0.0"
+  resolved "https://registry.yarnpkg.com/promise-finally/-/promise-finally-3.0.0.tgz#ddd5d0f895432b1206ceb8da1275064d18e7aa23"
+
 punycode@^1.4.1:
   version "1.4.1"
   resolved "https://registry.yarnpkg.com/punycode/-/punycode-1.4.1.tgz#c0d5a63b2718800ad8e1eb0fa5269c84dd41845e"
@@ -1043,6 +1083,13 @@ repeating@^2.0.0:
   dependencies:
     is-finite "^1.0.0"
 
+restore-cursor@^1.0.1:
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/restore-cursor/-/restore-cursor-1.0.1.tgz#34661f46886327fed2991479152252df92daa541"
+  dependencies:
+    exit-hook "^1.0.0"
+    onetime "^1.0.0"
+
 rimraf@^2.4.4:
   version "2.5.4"
   resolved "https://registry.yarnpkg.com/rimraf/-/rimraf-2.5.4.tgz#96800093cbf1a0c86bd95b4625467535c29dfa04"
@@ -1062,6 +1109,10 @@ semver@^5.0.3, semver@^5.1.0:
 semver@~5.0.1:
   version "5.0.3"
   resolved "https://registry.yarnpkg.com/semver/-/semver-5.0.3.tgz#77466de589cd5d3c95f138aa78bc569a3cb5d27a"
+
+slice-ansi@0.0.4:
+  version "0.0.4"
+  resolved "https://registry.yarnpkg.com/slice-ansi/-/slice-ansi-0.0.4.tgz#edbf8903f66f7ce2f8eafd6ceed65e264c831b35"
 
 slide@^1.1.5:
   version "1.1.6"
@@ -1131,11 +1182,9 @@ strip-ansi@^3.0.0:
   dependencies:
     ansi-regex "^2.0.0"
 
-strip-bom@^2.0.0:
-  version "2.0.0"
-  resolved "https://registry.yarnpkg.com/strip-bom/-/strip-bom-2.0.0.tgz#6219a85616520491f35788bdbf1447a99c7e6b0e"
-  dependencies:
-    is-utf8 "^0.2.0"
+strip-bom@^3.0.0:
+  version "3.0.0"
+  resolved "https://registry.yarnpkg.com/strip-bom/-/strip-bom-3.0.0.tgz#2334c18e9c759f7bdd56fdef7e9ae3d588e68ed3"
 
 strip-json-comments@~1.0.4:
   version "1.0.4"
@@ -1151,7 +1200,7 @@ supports-color@^2.0.0:
   version "2.0.0"
   resolved "https://registry.yarnpkg.com/supports-color/-/supports-color-2.0.0.tgz#535d045ce6b6363fa40117084629995e9df324c7"
 
-thenify@^3.1.0:
+thenify@^3.1.0, thenify@^3.2.0:
   version "3.2.1"
   resolved "https://registry.yarnpkg.com/thenify/-/thenify-3.2.1.tgz#251fd1c80aff6e5cf57cb179ab1fcb724269bd11"
   dependencies:
@@ -1160,12 +1209,6 @@ thenify@^3.1.0:
 throat@^3.0.0:
   version "3.0.0"
   resolved "https://registry.yarnpkg.com/throat/-/throat-3.0.0.tgz#e7c64c867cbb3845f10877642f7b60055b8ec0d6"
-
-throwback@^1.1.0:
-  version "1.1.1"
-  resolved "https://registry.yarnpkg.com/throwback/-/throwback-1.1.1.tgz#f007e7c17604a6d16d7a07c41aa0e8fedc6184a4"
-  dependencies:
-    any-promise "^1.3.0"
 
 timed-out@^2.0.0:
   version "2.0.0"
@@ -1205,34 +1248,30 @@ typedarray@~0.0.5:
   version "0.0.6"
   resolved "https://registry.yarnpkg.com/typedarray/-/typedarray-0.0.6.tgz#867ac74e3864187b1d3d47d996a78ec5c8830777"
 
-typescript@^2.0.3:
-  version "2.0.6"
-  resolved "https://registry.yarnpkg.com/typescript/-/typescript-2.0.6.tgz#5385499ac9811508c2c43e0ea07a1ddca435e111"
-
-typescript@^2.1.5:
+typescript@^2.1.4, typescript@^2.1.5:
   version "2.1.5"
   resolved "https://registry.yarnpkg.com/typescript/-/typescript-2.1.5.tgz#6fe9479e00e01855247cea216e7561bafcdbcd4a"
 
-typings-core@^1.5.0:
-  version "1.6.0"
-  resolved "https://registry.yarnpkg.com/typings-core/-/typings-core-1.6.0.tgz#0784a214b9d0960366e12bb0c6bae72818b3de27"
+typings-core@^2.2.0:
+  version "2.2.0"
+  resolved "https://registry.yarnpkg.com/typings-core/-/typings-core-2.2.0.tgz#62771bb10f0ebf1c6ff5082356be412820ea5817"
   dependencies:
-    any-promise "^1.3.0"
     array-uniq "^1.0.2"
     configstore "^2.0.0"
     debug "^2.2.0"
-    detect-indent "^4.0.0"
+    detect-indent "^5.0.0"
     graceful-fs "^4.1.2"
     has "^1.0.1"
     invariant "^2.2.0"
     is-absolute "^0.2.3"
+    jspm-config "^0.3.0"
     listify "^1.0.0"
     lockfile "^1.0.1"
     make-error-cause "^1.2.1"
     mkdirp "^0.5.1"
     object.pick "^1.1.1"
     parse-json "^2.2.0"
-    popsicle "^8.0.2"
+    popsicle "^9.0.0"
     popsicle-proxy-agent "^3.0.0"
     popsicle-retry "^3.2.0"
     popsicle-rewrite "^1.0.0"
@@ -1242,27 +1281,30 @@ typings-core@^1.5.0:
     rimraf "^2.4.4"
     sort-keys "^1.0.0"
     string-template "^1.0.0"
-    strip-bom "^2.0.0"
+    strip-bom "^3.0.0"
     thenify "^3.1.0"
     throat "^3.0.0"
     touch "^1.0.0"
-    typescript "^2.0.3"
+    typescript "^2.1.4"
     xtend "^4.0.0"
     zip-object "^0.1.0"
 
-typings@^1.3.3:
-  version "1.4.0"
-  resolved "https://registry.yarnpkg.com/typings/-/typings-1.4.0.tgz#f699ae68e0ca62b66eb1bd8f4e145809be3c6b8f"
+typings@^2.1.0:
+  version "2.1.0"
+  resolved "https://registry.yarnpkg.com/typings/-/typings-2.1.0.tgz#9cdbe0cd1626ab61b379e06ba4a3910d1d791006"
   dependencies:
-    any-promise "^1.0.0"
     archy "^1.0.0"
     bluebird "^3.1.1"
     chalk "^1.0.0"
+    cli-truncate "^0.2.1"
     columnify "^1.5.2"
+    elegant-spinner "^1.0.1"
     has-unicode "^2.0.1"
     listify "^1.0.0"
+    log-update "^1.0.2"
     minimist "^1.2.0"
-    typings-core "^1.5.0"
+    promise-finally "^3.0.0"
+    typings-core "^2.2.0"
     update-notifier "^1.0.0"
     wordwrap "^1.0.0"
     xtend "^4.0.1"

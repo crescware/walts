@@ -13,8 +13,7 @@
     "intelli-espower-loader": "^1.0.1",
     "mocha": "^3.2.0",
     "power-assert": "^1.4.2",
-    "typescript": "^2.1.5",
-    "typings": "^1.3.3"
+    "typescript": "^2.1.5"
   },
   "directories": {
     "test": "test/"
@@ -54,6 +53,5 @@
     "build": "tsc -p .",
     "typings": "typings install",
     "test": "npm run build && mocha --require intelli-espower-loader --reporter dot ./test/test.js"
-  },
-  "typings": "index.d.ts"
+  }
 }

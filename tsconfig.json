@@ -1,28 +1,19 @@
 {
-    "compilerOptions": {
-        "target": "es5",
-        "noImplicitAny": true,
-        "experimentalDecorators": true,
-        "emitDecoratorMetadata": true,
-        "moduleResolution": "node"
-    },
-    "filesGlob": [
-        "*.ts",
-        "!*.d.ts",
-        "src/**/*.ts",
-        "!src/**/*.d.ts",
-        "test/**/*.ts",
-        "typings/index.d.ts",
-        "node_modules/typescript/lib/lib.es6.d.ts"
-    ],
-    "files": [
-        "index.ts",
-        "src/actions.ts",
-        "src/dispatcher.ts",
-        "src/store.ts",
-        "src/utils.ts",
-        "test/test.ts",
-        "typings/index.d.ts",
-        "node_modules/typescript/lib/lib.es6.d.ts"
+  "compilerOptions": {
+    "target": "es5",
+    "noImplicitAny": true,
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
+    "moduleResolution": "node",
+    "lib": [
+      "es2015",
+      "dom"
     ]
+  },
+  "include": [
+    "*.ts"
+  ],
+  "exclude": [
+    "*.d.ts"
+  ]
 }
