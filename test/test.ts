@@ -1,6 +1,6 @@
 import 'rxjs'
 import * as assert from 'power-assert'
-import { Actions, Action, DelayedAction, AsyncAction } from '../src/actions'
+import { Actions, Action, DelayedAction } from '../src/actions'
 import { Dispatcher } from '../src/dispatcher'
 import { Store } from '../src/store'
 
