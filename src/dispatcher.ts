@@ -1,13 +1,7 @@
 import { Subject } from 'rxjs'
 import { isPromise as rxIsPromise } from 'rxjs/util/isPromise'
 
-import {
-  Action,
-  SyncAction,
-  DelayedAction,
-  AsyncAction,
-  Delayed
-} from './actions'
+import { Action, SyncAction, DelayedAction, Delayed } from './actions'
 import { State } from './store'
 import { flatten } from './utils'
 
@@ -37,10 +31,6 @@ function isAction<ST>(v: ST | Action<ST> | Action<ST>[]): v is Action<ST> {
 
 function isActions<ST>(v: Action<ST> | Action<ST>[]): v is Action<ST>[] {
   return Array.isArray(v)
-}
-
-function isAsyncAction<ST>(v: Action<ST>): v is AsyncAction<ST> {
-  return rxIsPromise(v)
 }
 
 function isDelayed<ST>(v: ST | Delayed<ST>): v is Delayed<ST> {
@@ -101,17 +91,6 @@ export class Dispatcher<ST extends State> {
           : finish(resolve, complete$)
 
         queue.subscribe((state: ST) => {
-          if (isAsyncAction<ST>(action)) {
-            console.warn('Use of promise is deprecated. Please use the Actions#delayed() instead.')
-            action.then((_action) => {
-              const result = _action(state)
-              this.continueNext(result, nextQueue)
-            }).catch((err) => {
-              this.complete$.error(err)
-            })
-            return
-          }
-
           const syncOrDelayedAction = action as SyncAction<ST> | DelayedAction<ST>
           let stateOrDelayed: ST | Delayed<ST>
           try {
