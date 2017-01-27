@@ -997,9 +997,9 @@ power-assert-util-string-width@^1.1.0:
   dependencies:
     eastasianwidth "^0.1.1"
 
-power-assert@^1.4.1:
-  version "1.4.1"
-  resolved "https://registry.yarnpkg.com/power-assert/-/power-assert-1.4.1.tgz#482ee098a9877e8cfa72242c8499b93f20709c4e"
+power-assert@^1.4.2:
+  version "1.4.2"
+  resolved "https://registry.yarnpkg.com/power-assert/-/power-assert-1.4.2.tgz#43319cd0fecd3221f276f1cc49ffa2eaeb9a1815"
   dependencies:
     define-properties "^1.1.2"
     empower "^1.1.0"
