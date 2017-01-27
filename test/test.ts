@@ -95,10 +95,19 @@ describe('Integration', () => {
 
       let i = 0
       store.observable.subscribe((st) => {
-        if (i === 0) { assert(st.a === 1)  }
-        if (i === 1) { assert(st.a === 2)  }
-        if (i === 2) { assert(st.a === 4)  }
-        if (i === 3) { assert(st.a === 7);  done()  }
+        if (i === 0) {
+          assert(st.a === 1)
+        }
+        if (i === 1) {
+          assert(st.a === 2)
+        }
+        if (i === 2) {
+          assert(st.a === 4)
+        }
+        if (i === 3) {
+          assert(st.a === 7);
+          done()
+        }
         i++
       })
 
@@ -113,10 +122,19 @@ describe('Integration', () => {
 
       let i = 0
       store.observable.subscribe((st) => {
-        if (i === 0) { assert(st.a === 1) }
-        if (i === 1) { assert(st.a === 4) }
-        if (i === 2) { assert(st.a === 11) }
-        if (i === 3) { assert(st.a === 22); done() }
+        if (i === 0) {
+          assert(st.a === 1)
+        }
+        if (i === 1) {
+          assert(st.a === 4)
+        }
+        if (i === 2) {
+          assert(st.a === 11)
+        }
+        if (i === 3) {
+          assert(st.a === 22);
+          done()
+        }
         i++
       })
 
@@ -131,10 +149,23 @@ describe('Integration', () => {
 
       let i = 0
       store.observable.subscribe((st) => {
-        if (i === 0) { assert(st.a === 1); assert(st.b === 1); }
-        if (i === 1) { assert(st.a === 2); assert(st.b === 1); }
-        if (i === 2) { assert(st.a === 2); assert(st.b === 3); }
-        if (i === 3) { assert(st.a === 5); assert(st.b === 3); done() }
+        if (i === 0) {
+          assert(st.a === 1);
+          assert(st.b === 1);
+        }
+        if (i === 1) {
+          assert(st.a === 2);
+          assert(st.b === 1);
+        }
+        if (i === 2) {
+          assert(st.a === 2);
+          assert(st.b === 3);
+        }
+        if (i === 3) {
+          assert(st.a === 5);
+          assert(st.b === 3);
+          done()
+        }
         i++
       })
 
@@ -149,10 +180,23 @@ describe('Integration', () => {
 
       let i = 0
       store.observable.subscribe((st) => {
-        if (i === 0) { assert(st.a ===  1); assert(st.b ===  1); }
-        if (i === 1) { assert(st.a ===  2); assert(st.b ===  3); }
-        if (i === 2) { assert(st.a ===  5); assert(st.b ===  7); }
-        if (i === 3) { assert(st.a === 10); assert(st.b === 13); done() }
+        if (i === 0) {
+          assert(st.a === 1);
+          assert(st.b === 1);
+        }
+        if (i === 1) {
+          assert(st.a === 2);
+          assert(st.b === 3);
+        }
+        if (i === 2) {
+          assert(st.a === 5);
+          assert(st.b === 7);
+        }
+        if (i === 3) {
+          assert(st.a === 10);
+          assert(st.b === 13);
+          done()
+        }
         i++
       })
 
@@ -188,6 +232,7 @@ describe('Integration', () => {
           })
         }
       }
+
       addToA(n: number): Action<TestState> {
         return (st) => {
           return {
@@ -195,6 +240,7 @@ describe('Integration', () => {
           } as TestState
         }
       }
+
       causeError(): DelayedAction<TestState> {
         return (st) => {
           return this.delayed((apply) => {
@@ -202,6 +248,7 @@ describe('Integration', () => {
           })
         }
       }
+
       causeErrorAfterApply(): DelayedAction<TestState> {
         return (st) => {
           return this.delayed((apply) => {
@@ -211,6 +258,7 @@ describe('Integration', () => {
           })
         }
       }
+
       causeErrorNested(): DelayedAction<TestState> {
         return (st) => {
           return this.delayed((apply) => {
@@ -306,6 +354,7 @@ describe('Integration', () => {
           })
         })
       }
+
       addToA(n: number): Action<TestState> {
         return (st) => {
           return {
@@ -313,6 +362,7 @@ describe('Integration', () => {
           } as TestState
         }
       }
+
       causeError(): AsyncAction<TestState> {
         return new Promise((resolve) => {
           resolve((st: TestState) => {
@@ -320,6 +370,7 @@ describe('Integration', () => {
           })
         })
       }
+
       causeErrorWithReject(): AsyncAction<TestState> {
         return new Promise((resolve, reject) => {
           reject('reject')

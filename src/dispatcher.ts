@@ -1,7 +1,13 @@
 import { Subject } from 'rxjs'
 import { isPromise as rxIsPromise } from 'rxjs/util/isPromise'
 
-import { Action, SyncAction, DelayedAction, AsyncAction, Delayed } from './actions'
+import {
+  Action,
+  SyncAction,
+  DelayedAction,
+  AsyncAction,
+  Delayed
+} from './actions'
 import { State } from './store'
 import { flatten } from './utils'
 
@@ -17,7 +23,7 @@ interface ResultChunk<ST> {
 function finish<ST>(resolve: (st: ST) => void, complete$?: Subject<ST>): SubjectLike<ST> {
   return {
     next: (st: ST) => {
-    resolve(st)
+      resolve(st)
       if (complete$) {
         complete$.next(st)
       }
@@ -110,7 +116,7 @@ export class Dispatcher<ST extends State> {
           let stateOrDelayed: ST | Delayed<ST>
           try {
             stateOrDelayed = syncOrDelayedAction(state)
-          } catch(e) {
+          } catch (e) {
             this.complete$.error(e)
           }
           if (isDelayed<ST>(stateOrDelayed)) {
