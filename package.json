@@ -22,18 +22,18 @@
     "test": "test/"
   },
   "files": [
-    "index.js",
+    "index.ts",
     "index.d.ts",
     "LICENSE",
     "package.json",
     "README.md",
-    "src/actions.js",
+    "src/actions.ts",
     "src/actions.d.ts",
-    "src/dispatcher.js",
+    "src/dispatcher.ts",
     "src/dispatcher.d.ts",
-    "src/store.js",
+    "src/store.ts",
     "src/store.d.ts",
-    "src/utils.js"
+    "src/utils.ts"
   ],
   "homepage": "https://github.com/crescware/walts",
   "keywords": [
