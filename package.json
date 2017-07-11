@@ -15,6 +15,7 @@
     "intelli-espower-loader": "^1.0.1",
     "mocha": "^3.2.0",
     "power-assert": "^1.4.2",
+    "rxjs": "5.0.1",
     "typescript": "^2.1.5"
   },
   "directories": {
