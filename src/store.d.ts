@@ -1,4 +1,4 @@
-import { Observable } from 'rxjs/Observable'
+import { Observable } from 'rxjs'
 import { Dispatcher } from './dispatcher'
 
 export declare abstract class State {}

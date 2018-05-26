@@ -1,7 +1,8 @@
 .idea
 node_modules
 npm-debug.log
-*.js
+src/*.js
+test/*.js
 .tmp
 typings/
 

@@ -1,9 +1,8 @@
-import { Subject } from 'rxjs'
-import { isPromise as rxIsPromise } from 'rxjs/util/isPromise'
-
-import { Action, SyncAction, DelayedAction, Delayed } from './actions'
-import { State } from './store'
-import { flatten } from './utils'
+import { Subject } from 'rxjs';
+import { isPromise as rxIsPromise } from 'rxjs/internal-compatibility'
+import { Action, Delayed, DelayedAction, SyncAction } from './actions';
+import { State } from './store';
+import { flatten } from './utils';
 
 interface SubjectLike<ST> {
   next: (st: ST) => void

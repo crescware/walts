@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Observable, Subject } from 'rxjs/Rx';
+import { Observable, Subject } from 'rxjs';
 import { State, Store } from 'walts';
 
 import { AppDispatcher } from './app.dispatcher';
